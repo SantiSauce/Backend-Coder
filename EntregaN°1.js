@@ -54,14 +54,9 @@ productosEnEmpresa.getProduct();
 productosEnEmpresa.addProduct("remera","sin descripcion", "200", "sin imagen", "abc123", 25);
 productosEnEmpresa.addProduct("zapas","sin descripcion", "200", "sin imagen", "4235", 25);
 productosEnEmpresa.addProduct("cartera","sin descripcion", "200", "sin imagen", "abc123", 25);
-productosEnEmpresa.addProduct("buzo","sin descripcion", "200", "sin imagen", "124", 25);
-productosEnEmpresa.addProduct("buzo","sin descripcion", "200", "sin imagen", "1345", 25);
-productosEnEmpresa.addProduct("buzo","sin descripcion", "200", "sin imagen", "avv43", 25);
 productosEnEmpresa.getProduct();
 productosEnEmpresa.getProductById(2);
 productosEnEmpresa.getProductById(9);
 
 
 
-
-module.exports.products=productosEnEmpresa;
