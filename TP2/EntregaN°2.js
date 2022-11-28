@@ -7,12 +7,6 @@ class productManager{
         this.path = path
     }
 
-    nextProductId =()=>{
-        const listado = JSON.parse(fs.readFileSync(this.path, "utf-8"))
-        const count = listado.products.length
-        const nextId = listado[count-1].id + 1
-        return nextId;
-    }    
     
     addProduct = async(title, description, price, thumbnail, code, stock) => 
     {
