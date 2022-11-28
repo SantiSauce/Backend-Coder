@@ -27,7 +27,7 @@ class productManager{
                     await fs.promises.appendFile(this.path, JSON.stringify(listaDeProductos))
 
                 }else{console.log("El producto ya fue ingresado");}             
-            }else { 
+            }if(!fs.existsSync(this.path)) { 
             const id = 1
             const nuevoProducto = {id, title, description, price, thumbnail, code, stock};
             this.products.push(nuevoProducto)
@@ -87,4 +87,4 @@ class productManager{
     const path = "./listadoProductos.json"
     const allProducts = new productManager(path);
     allProducts.addProduct("remera","sin descripcion", "200", "sin imagen", "123", 25);
-    allProducts.addProduct("remera","sin descripcion", "200", "sin imagen", "222", 25);
+  
