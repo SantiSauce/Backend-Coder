@@ -40,13 +40,13 @@ class productManager{
     }
             
 
-    getProduct = () => {
-        const listadoDeProductos = JSON.parse(fs.readFileSync(this.path, "utf-8"))       
+    getProduct = async () => {
+        const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))       
         console.log (listadoDeProductos)
     }
 
-    getProductById = (id) => {
-        const listadoDeProductos = JSON.parse(fs.readFileSync(this.path, "utf-8"))
+    getProductById = async (id) => {
+        const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))
         const producto = listadoDeProductos.find(producto => producto.id == id) 
         if ((producto)){
             console.log(`Se ha encontrado el producto de ID ${id}`);
@@ -54,20 +54,20 @@ class productManager{
         }else{console.log(`Not Found`);}
     }
     
-    deleteProduct = (id) =>{
-        const listadoDeProductos = JSON.parse(fs.readFileSync(this.path, "utf-8"))
+    deleteProduct = async (id) =>{
+        const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))
         const producto = listadoDeProductos.find(producto => producto.id == id) 
         if((producto)){ 
         const resultado = listadoDeProductos.filter(producto => producto.id != id)
-        fs.writeFileSync(this.path, JSON.stringify(resultado))
+         await fs.promises.writeFile(this.path, JSON.stringify(resultado))
 
         }else{console.log("el producto no existe");}
     }
 
-    updateProduct = (id, obj) =>{
+    updateProduct = async (id, obj) =>{
 
         obj.id = id
-        const listadoDeProductos = JSON.parse(fs.readFileSync(this.path, "utf-8"))
+        const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))
 
         for (let i=0; i<listadoDeProductos.length; i++){
             if(listadoDeProductos[i].id == id){
@@ -75,7 +75,7 @@ class productManager{
                 break
             }
         }        
-        fs.writeFileSync(this.path, JSON.stringify(listadoDeProductos))
+        await fs.promises.writeFile(this.path, JSON.stringify(listadoDeProductos))
 
     }
 }
@@ -84,6 +84,10 @@ const path = "./listadoProductos.json"
 const allProducts = new productManager(path);
 
 allProducts.addProduct("zapatilla", "sin descripcion", "$4000", "sin imagen", "123", 300)
+allProducts.addProduct("remera", "sin descripcion", "$4000", "sin imagen", "33332", 300)
+
+allProducts.getProduct()
+
 
       
 
