@@ -41,13 +41,8 @@ class productManager{
             
 
     getProduct = async () => {
-        if(fs.existsSync(this.path)){ 
         const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))       
         console.log (listadoDeProductos)
-        }else{
-            let listadoDeProductos = []
-            return  console.log(listadoDeProductos);
-        }
     }
 
     getProductById = async (id) => {
@@ -84,13 +79,13 @@ class productManager{
 
     }
 }
-    
+
 const path = "./listadoProductos.json"
 const allProducts = new productManager(path);
 
-allProducts.getProduct()
-
-
-      
-
-
+allProducts.addProduct("zapatilla", "sin descripcion", "$4000", "sin imagen", "123", 300)
+allProducts.addProduct("ojotas", "sin descripcion", "$4000", "sin imagen", "456", 300)
+allProducts.addProduct("gorras", "sin descripcion", "$4000", "sin imagen", "789", 300)
+allProducts.addProduct("shorts", "sin descripcion", "$4000", "sin imagen", "134", 300)
+allProducts.addProduct("bermuda", "sin descripcion", "$4000", "sin imagen", "145", 300)
+allProducts.addProduct("remera", "sin descripcion", "$4000", "sin imagen", "156", 300)
