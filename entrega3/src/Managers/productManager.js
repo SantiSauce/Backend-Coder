@@ -1,9 +1,24 @@
-const fs = require ("fs");
+import fs from "fs"
 
-class productManager{
+export class productManagerFileSystem{
 
     constructor(path){        
         this.path = path
+
+        this.#init()
+    }
+
+    #init(){
+        try {
+            const existsFile = fs.existsSync(this.path)
+
+            if(existsFile) return
+            
+            fs.writeFileSync(this.path, JSON.stringify([]))
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     
@@ -40,9 +55,12 @@ class productManager{
     }
             
 
-    getProduct = async () => {
-        const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))       
-        console.log (listadoDeProductos)
+    async getProduct ()  {
+        
+        const response = JSON.parse(await fs.promises.readFile(this.path, "utf-8")) 
+        return response      
+        //console.log (listadoDeProductos)
+        
     }
 
     getProductById = async (id) => {
@@ -79,13 +97,3 @@ class productManager{
 
     }
 }
-
-const path = "./listadoProductos.json"
-const allProducts = new productManager(path);
-
-allProducts.addProduct("zapatilla", "sin descripcion", "$4000", "sin imagen", "123", 300)
-allProducts.addProduct("ojotas", "sin descripcion", "$4000", "sin imagen", "456", 300)
-allProducts.addProduct("gorras", "sin descripcion", "$4000", "sin imagen", "789", 300)
-allProducts.addProduct("shorts", "sin descripcion", "$4000", "sin imagen", "134", 300)
-allProducts.addProduct("bermuda", "sin descripcion", "$4000", "sin imagen", "145", 300)
-allProducts.addProduct("remera", "sin descripcion", "$4000", "sin imagen", "156", 300)
