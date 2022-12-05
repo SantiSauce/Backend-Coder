@@ -38,6 +38,11 @@ app.get("/api/products/:pid", async(req, res) =>{
 
         const producto = allProducts.find(producto => producto.id == pid)
 
+        if(!producto){
+            res.send({success: false, error: "No se ha encontrado el producto"})
+
+        }
+
         res.send({success: true, products: producto})
 
 
