@@ -4,6 +4,21 @@ class productManager{
 
     constructor(path){        
         this.path = path
+
+        this.#init()
+    }
+
+    #init(){
+        try {
+            const existsFile = fs.existsSync(this.path)
+
+            if(existsFile) return
+            
+            fs.writeFileSync(this.path, JSON.stringify([]))
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     
@@ -41,13 +56,11 @@ class productManager{
             
 
     getProduct = async () => {
-        if(fs.existsSync(this.path)){ 
-        const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))       
+        
+        const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8")) 
+        //return response      
         console.log (listadoDeProductos)
-        }else{
-            let listadoDeProductos = []
-            return  console.log(listadoDeProductos);
-        }
+        
     }
 
     getProductById = async (id) => {
@@ -89,6 +102,10 @@ const path = "./listadoProductos.json"
 const allProducts = new productManager(path);
 
 allProducts.getProduct()
+
+allProducts.addProduct("remera", "muy grande", "$5000", "sin imagen", "123", 1500)
+
+
 
 
       
