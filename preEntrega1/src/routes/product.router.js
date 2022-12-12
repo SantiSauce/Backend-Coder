@@ -69,7 +69,7 @@ router.put("/:pid", async(req, res) =>{
 
     let pid = req.params.pid
     const producto = req.body
-    productManager.updateProduct(pid, producto)    
+    await productManager.updateProduct(pid, producto)    
     return res.send({status: "success", message: "El producto se ha hactualizado correctamente" })    
 })
 
@@ -77,9 +77,9 @@ router.delete("/:pid", async(req, res) =>{
 
     let pid = req.params.pid
 
-    productManager.deleteProduct(pid)
+    await productManager.deleteProduct(pid)
     
-    res.send({status: "success", error:"Product eliminated"})
+    res.send({status: "success", message:"Product eliminated"})
 })
 
 
