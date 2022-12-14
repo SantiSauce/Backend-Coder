@@ -69,7 +69,11 @@ export class productManagerFileSystem{
         if ((producto)){
             console.log(`Se ha encontrado el producto de ID ${id}`);
             console.log(producto);
-        }else{console.log(`Not Found`);}
+            return producto
+        }else{
+            console.log(`Not Found`);
+            return null
+        }
     }
     
     deleteProduct = async (id) =>{
@@ -87,13 +91,18 @@ export class productManagerFileSystem{
         obj.id = id
         const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))
 
-        for (let i=0; i<listadoDeProductos.length; i++){
+        const indexOfProduct = listadoDeProductos.map((product) => product.id).indexOf(id)
+
+        listadoDeProductos[indexOfProduct] = {...listadoDeProductos[indexOfProduct], ...obj}
+        
+        await fs.promises.writeFile(this.path, JSON.stringify(listadoDeProductos))
+        
+        /*for (let i=0; i<listadoDeProductos.length; i++){
             if(listadoDeProductos[i].id == id){
                 listadoDeProductos[i] = obj
                 break
             }
-        }        
-        await fs.promises.writeFile(this.path, JSON.stringify(listadoDeProductos))
+        }*/
 
     }
 }

@@ -29,10 +29,14 @@ router.post("/:cid/product/:pid", async(req, res) => {
     const carrito = await cartManager.getCartById(cid)
     if(!carrito){
         res.status(404).send({status: "error", error: "Cart not found"})
+    }
+    const productValidation = await productManager.getProductById(pid)
+    if(!productValidation){
+        res.status(404).send({status: "error", error: "Product not found"})
     }else{
         await cartManager.addProductToCart(cid, pid)
         res.send({status: "succesfull", message: "Product added to cart"})
-    }
+    }    
 })
 
 
