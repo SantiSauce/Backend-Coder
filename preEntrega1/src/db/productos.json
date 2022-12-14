@@ -1,1 +1,1 @@
-[{"id":1,"title":"remera","description":"azul","code":"123","price":1500,"status":true,"stock":1300,"category":"remeras","thumbnails":[]},{"id":2,"title":"zapatilla","description":"negra","code":"234","price":6500,"status":true,"stock":650,"category":"zapatillas","thumbnails":[]}]
+[{"id":"1","title":"buzo","description":"azul","code":"123","price":1531,"status":true,"stock":1300,"category":"remeras","thumbnails":[]},{"id":2,"title":"zapatilla","description":"negra","code":"234","price":6500,"status":true,"stock":650,"category":"zapatillas","thumbnails":[]}]

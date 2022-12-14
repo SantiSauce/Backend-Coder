@@ -91,12 +91,12 @@ export class productManagerFileSystem{
         obj.id = id
         const listadoDeProductos = JSON.parse(await fs.promises.readFile(this.path, "utf-8"))
 
-        const indexOfProduct = listadoDeProductos.map((product) => product.id).indexOf(id)
+        const indexOfProduct = listadoDeProductos.findIndex((product) => product.id == id )
 
         listadoDeProductos[indexOfProduct] = {...listadoDeProductos[indexOfProduct], ...obj}
         
         await fs.promises.writeFile(this.path, JSON.stringify(listadoDeProductos))
-        
+
         /*for (let i=0; i<listadoDeProductos.length; i++){
             if(listadoDeProductos[i].id == id){
                 listadoDeProductos[i] = obj
