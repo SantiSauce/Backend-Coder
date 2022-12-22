@@ -1,0 +1,45 @@
+<div>
+    <form id="create-product-form">
+        <input type="text" name="title" placeholder="Título" />
+        <input type="text" name="description" placeholder="Descripción" />
+        <input type="number" name="price" placeholder="Price" />
+        <input type="number" name="stock" placeholder="Stock" />
+        <input type="text" name="category" placeholder="Category" />
+        <input type="text" name="thumbnails" placeholder="Thumbnails" />
+        <input type="text" name="code" placeholder="Ingrese el codigo del producto" />
+        <input type="submit" value="Enviar"/>
+    </form>
+</div>
+
+<div>,
+    <h1 class="product-list">Lista de Producto en tiempo real</h1>
+
+    <table class="product-list">
+        <tr>
+            <th>Título</th>
+            <th>Description</th>
+            <th>Code</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Miniatura</th>
+        </tr>
+
+        <tbody id="products-table-body">
+
+        </tbody>
+    </table>
+</div>
+
+<script src="js/main.js"></script>
+
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid;
+    }
+    .title{
+        text-align: 100%;
+    }
+</style>
