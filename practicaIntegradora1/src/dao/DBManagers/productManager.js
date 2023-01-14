@@ -49,12 +49,13 @@ export class productManagerDB {
     }
 
     updateProduct = async (id, product) => {
-        product.id = id
-        const productList = await this.getProducts()
-        const updatedProduct = await productModel.findOneAndUpdate(id, product, {new: true})
-        console.log(updatedProduct);
-        //const indexOfProduct = productList.findIndex((product) => product.id == id)
-        //productList[indexOfProduct] = {...productList[indexOfProduct], ...product}
+        const productValidation = await productModel.findOne({id:id}).lean().exec()
+        if(productValidation){
+
+            await productModel.updateOne({id:id}, {$set:product})
+            const productUpdated = await productModel.findOne({id:id}).lean().exec()
+            return productUpdated
+        }
         
     }
 }
