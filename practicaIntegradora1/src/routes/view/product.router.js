@@ -7,35 +7,10 @@ import { productMongoManager } from '../../dao/DBManagers/index.js'
 const router = Router()
 
 
-/*router.get("/", async (req, res) => {
-    try {
-        const { limit } = req.query
-
-        const allProducts = await productMongoManager.getProducts()
-
-        if (!limit || limit < 1){
-            res.send({success: true, product: allProducts})
-            res.render('index', {allProducts})
-
-        }
-
-        const products = allProducts.slice(0, limit)
-        res.send({success: true, product: products})
-            res.render('index', {products})
-
-        
-    } catch (error) {
-        console.log(error);
-
-        res.send({success: false, error: "Ha ocurrido un error"})
-        
-    }
-})
-*/
 
 router.get('/', async (req, res) => {
-    const products = await productMongoManager.getProducts()
-    res.render('index', {products})
+    res.render('')
+
 })//hecho
 
 router.get('/delete/:id', async (req, res) => {
