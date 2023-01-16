@@ -1,7 +1,6 @@
 
 const socket = io()
 
-socket.on('hello',data  => {console.log(data)})
 
 let user;
 let chatBox = document.getElementById('chatBox')

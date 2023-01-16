@@ -5,6 +5,7 @@ import handlebars from 'express-handlebars'
 import bodyParser from 'body-parser'
 import { Server as IOServer} from 'socket.io'
 import { Server as HttpServer } from 'http'
+//import fetch from "node-fetch"
 
 import {productRouter} from './routes/index.js'
 import {productViews} from './routes/index.js'
@@ -12,6 +13,8 @@ import {cartRouter} from './routes/index.js'
 import {cartViews} from './routes/index.js'
 import { messagesViews } from "./routes/index.js"
 import { messagesRouter } from "./routes/api/messages.router.js"
+import messageModel from "./dao/models/messagges.model.js"
+
 
 const app = express()
 const PORT = 8082
@@ -53,13 +56,17 @@ server.on('error', (error)=>{
     console.log(error)
 })
 
-let messages = []
-io.on('connection', (socket) => {
+
+
+io.on('connection',  (socket) => {
     console.log(`New client connected, id: ${socket.id}`)
-    socket.on('message', data =>{
-        console.log(data);
-        messages.push(data)
-        io.emit('messageLogs', messages)
+    socket.on('message',async data =>{
+        console.log(data);  
+        let messagesDB = await messageModel.find().lean().exec()
+    
+        
+        messagesDB.push(data)
+        io.emit('messageLogs', messagesDB)
     })
 })
 

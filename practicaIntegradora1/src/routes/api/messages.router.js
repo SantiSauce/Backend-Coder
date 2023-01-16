@@ -11,4 +11,9 @@ router.post('/', (req, res) => {
     createdMessage.save()
 })
 
+router.get('/', async(req, res) => {
+     const messages= await messageModel.find().lean().exec()
+     res.json(messages)
+})
+
 export { router as messagesRouter}

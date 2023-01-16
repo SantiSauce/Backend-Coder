@@ -21,8 +21,7 @@ export class productManagerDB {
         const valide = await productModel.findOne({code: product.code}).lean().exec()
 
         if(!valide){
-            let id = this.getNextId(productList)
-            const newProduct = {id, title: product.title, description: product.description, code: product.code, price: product.price, status: true, stock: product.stock, category: product.category, thumbnails: product.thumbnails}
+            const newProduct = {title: product.title, description: product.description, code: product.code, price: product.price, status: true, stock: product.stock, category: product.category, thumbnails: product.thumbnails}
             const createdProduct = new productModel(newProduct)
             await createdProduct.save()
             return createdProduct.title
@@ -34,26 +33,26 @@ export class productManagerDB {
     }
 
     getProductById = async (id) => {
-        const product = await productModel.findOne({id: id}).lean().exec()
+        const product = await productModel.findOne({_id: id}).lean().exec()
         if(product){
             return product
         }else{console.log("el producto no existe")}
     }
        
     deleteProduct = async (id) =>{
-        const product = await productModel.findOne({id: id}).lean().exec()
+        const product = await productModel.findOne({_id: id}).lean().exec()
 
         if((product)){ 
-            await productModel.deleteOne({ id: id })
+            await productModel.deleteOne({ _id: id })
         }else{console.log("el producto no existe")}
     }
 
     updateProduct = async (id, product) => {
-        const productValidation = await productModel.findOne({id:id}).lean().exec()
+        const productValidation = await productModel.findOne({_id:id}).lean().exec()
         if(productValidation){
 
-            await productModel.updateOne({id:id}, {$set:product})
-            const productUpdated = await productModel.findOne({id:id}).lean().exec()
+            await productModel.updateOne({_id:id}, {$set:product})
+            const productUpdated = await productModel.findOne({_id:id}).lean().exec()
             return productUpdated
         }
         
