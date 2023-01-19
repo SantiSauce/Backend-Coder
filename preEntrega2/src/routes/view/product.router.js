@@ -10,16 +10,20 @@ const router = Router()
 
 router.get('/', async (req, res) => {
 
+
+    const limit = req.query
+
     let page = parseInt(req.query.page)
     if(!page) page = 1
 
-    const products = await productModel.paginate({}, {page, limit: 1, lean: true})
+    const products = await productModel.paginate({}, {page, limit: 4, lean: true})
 
     products.prevLink = products.hasPrevPage ? `/products?page=${products.prevPage}` : ''
     products.nextLink = products.hasNextPage ? `/products?page=${products.nextPage}` : ''
     products.isValid = !(page <= 0 || page>products.totalPages)
+    console.log(products);
 
-    res.render('products', {products})
+    res.render('products', products)
 })//hecho
 
 router.get('/delete/:id', async (req, res) => {

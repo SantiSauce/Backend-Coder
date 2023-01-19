@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 import express from 'express'
 
 export class cartManagerDB {
-
+ 
 
     getNextId = (list) =>{
         const count = list.length
@@ -21,7 +21,6 @@ export class cartManagerDB {
             return cart
         }else{console.log("el carrito no existe")}
     }
-
 
     addCart = async() => {
     
@@ -59,6 +58,19 @@ export class cartManagerDB {
         }else{return error}
     }
 
-   
+    deleteProductFromCart = async (cid, pid) =>{
+        const cart = await cartModel.findOne({_id: cid}).lean().exec()
+        const product = await productModel.findOne({_id: pid}).lean().exec()
+        if(cart && product){           
+            await cartModel.updateOne({_id:cid,}, {$pull:{products:pid}})
+        }else{
+            return (error)
+        }        
+    }
+
+
+
+
+
 
 }

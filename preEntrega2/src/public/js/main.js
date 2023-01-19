@@ -1,4 +1,5 @@
 
+import { cartMongoManager } from "../../dao/DBManagers";
 const socket = io()
 
 
@@ -45,6 +46,7 @@ socket.on('messageLogs', data =>{
         messages += `<b>${message.user}</b>: ${message.message}<br>`
     } )
 
-    log.innerHTML = messages
-    
+    log.innerHTML = message    
 })
+
+ 
