@@ -62,10 +62,40 @@ export class cartManagerDB {
         const cart = await cartModel.findOne({_id: cid}).lean().exec()
         const product = await productModel.findOne({_id: pid}).lean().exec()
         if(cart && product){           
-            await cartModel.updateOne({_id:cid,}, {$pull:{products:pid}})
+            await cartModel.updateOne({_id:cid,}, {$pull:{products:{product: pid}}})
         }else{
             return (error)
         }        
+    }
+
+    deleteAllProductsFromCart = async (cid) => {
+        try {
+            await cartModel.updateOne({_id: cid},{$set: {products: []}})    
+        }
+        catch(error){
+            console.log(error);
+        }
+}
+
+    updateCart = async (cid, products) => {
+
+        const cart = await cartModel.findOne({_id: cid}).lean().exec()
+
+        const productIdArray = products.map(e => e._id)
+
+        if(cart){
+            productIdArray.forEach(product => this.addProductToCart(cid, product._id))
+        }         
+    }
+
+    updateStock = async (cid, pid, obj) => {
+        const cart = await cartModel.findOne({_id: cid}).lean().exec()
+        const product = await productModel.findOne({_id: pid}).lean().exec()
+        if(cart && product){           
+            await cartModel.updateOne({_id: cid, 'products.product': pid},{$set:{'products.$.quantity':obj.stock}})             
+        }else{
+            return (error)
+        }  
     }
 
 

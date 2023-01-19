@@ -3,7 +3,7 @@ import mongoosePaginate from 'mongoose-paginate-v2'
 
 const collection = 'products'
 
-const productSchema = new mongoose.Schema({
+const productSchema = mongoose.Schema({
     title: String,
     description: String,
     price: Number,
