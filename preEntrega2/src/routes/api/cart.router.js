@@ -77,10 +77,10 @@ router.put('/:cid', async (req, res) => {
 })// falta probar
 
 //update stock
-router.put('/:cid/products/:pid', async (req, res) => {
+router.put('/:cid/product/:pid', async (req, res) => {
     try {
-        await cartMongoManager.updateStock(req.params.cid, req.params.pid, req.body)
-        res.json("Stock updated")
+        await cartMongoManager.updateQuantity(req.params.cid, req.params.pid, req.body)
+        res.json("Quantity updated")
     } catch (error) {
         console.log(error);
     }
