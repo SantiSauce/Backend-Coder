@@ -17,7 +17,7 @@ import messageModel from "./dao/models/messagges.model.js"
 
 
 const app = express()
-const PORT = 8082
+const PORT = 8080
 
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
