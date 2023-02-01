@@ -13,6 +13,7 @@ const router = Router()
 router.get('/:id', async (req, res) => {
 
      const cart = await cartMongoManager.getCartById(req.params.id)
+     console.log(cart);
      const cartProducts = cart.products.map(e => e.product)
 
      res.render('cart', {cartProducts})
