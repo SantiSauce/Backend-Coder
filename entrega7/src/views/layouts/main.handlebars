@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Kote's Gin Store</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://kit.fontawesome.com/fbd4ca866f.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <header>
-        
-        |
-        <a href="/sessions/login">Log in</a>
-        <a href="/sessions/register">Sign in</a>
-        <a href="/api/sessions/logout">Log Out</a>
-
+        {{> navbar2}}<br><br><br>
     
+        <main>{{{ body }}}</main>
 
-    </header>
+        {{> footer}}
+ 
+    
     <script src="/socket.io/socket.io.js"></script>
-    {{{ body }}}
 </body>
 </html>

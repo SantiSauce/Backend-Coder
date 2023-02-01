@@ -16,8 +16,9 @@ router.get('/login', async (req, res) => {
 })
 
 router.get('/admin', async(req, res) => {
-    const users = await usersModel.find().lean()
-    res.render('admin', {users})
+    res.render('admin')
 })
+
+
 
 export {router as sessionViews}

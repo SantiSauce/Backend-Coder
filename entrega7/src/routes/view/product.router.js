@@ -6,10 +6,8 @@ import { productMongoManager } from '../../dao/DBManagers/index.js'
 
 const router = Router()
 
-
-
 router.get('/', async (req, res) => {
-    const limit = req.query?.limit || 10
+    const limit = req.query?.limit || 8
     const page = req.query?.page || 1
     const filter = req.query?.query || ''
     //const sort = req.params?.sort
@@ -21,8 +19,8 @@ router.get('/', async (req, res) => {
 
     const products = await productMongoManager.getProducts(filter, search, options)
 
-    products.prevLink = (products.hasPrevPage) ? `/products?page=${products.prevPage}` : '' 
-    products.nextLink = (products.hasNextPage) ? `/products?page=${products.nextPage}` : '' 
+    products.prevLink = (products.hasPrevPage) ? `/home?page=${products.prevPage}` : '' 
+    products.nextLink = (products.hasNextPage) ? `/home?page=${products.nextPage}` : '' 
 
     
     const user = req.session.user
@@ -48,14 +46,14 @@ router.get('/', async (req, res) => {
         prevLink: products.prevLink,
         nextLink: products.nextLink
     }
+    
 
-    res.render('products', {response})
-})//hecho
+    res.render('home', {response})
+})
 
 router.get('/insertProduct', async (req, res) =>{
     res.render('insertProduct', {})
 })
-
 
 router.get('/:id', async (req, res) =>{
     const product = await productMongoManager.getProductById(req.params.id)
