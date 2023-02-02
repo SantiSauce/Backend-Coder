@@ -2,16 +2,17 @@ import { Router } from 'express'
 import mongoose from 'mongoose'
 import productModel from '../../dao/models/product.model.js'
 import { productMongoManager } from '../../dao/DBManagers/index.js'
-
+import { verificarAdmin } from '../../public/js/verificarAdmin.js'
 
 const router = Router()
 
 router.get('/', async (req, res) => {
+
     const limit = req.query?.limit || 8
     const page = req.query?.page || 1
     const filter = req.query?.query || ''
     //const sort = req.params?.sort
-
+    
     const search = {}
     if(filter) search['category'] = {$regex:filter}
 
@@ -24,20 +25,23 @@ router.get('/', async (req, res) => {
 
     
     const user = req.session.user
-    let isAdmin = false
     if(user.email === 'adminCoder@coder.com'){
-         isAdmin = true
+        req.session.user.rol = 'admin'
     }
+    let adminSession = verificarAdmin(req)
+    let { activeSession, admin } = adminSession;
+    console.log(activeSession);
+    console.log(admin);
 
     //esto es para el alert cuando recien entras 
     req.session.count = req.session.count ? req.session.count + 1 : 1
     const cuenta = req.session.count 
 
-    console.log(cuenta);
-
     const response = {
         status: 'success', 
-        payload: products.docs,user,isAdmin,cuenta,
+        payload: products.docs,
+        user,
+        cuenta,
         totalPages: products.totalPages,
         prevPage: products.prevPage,
         nextPage: products.nextPage,
@@ -48,7 +52,7 @@ router.get('/', async (req, res) => {
     }
     
 
-    res.render('home', {response})
+    res.render('home', {response, user, admin, activeSession})
 })
 
 router.get('/insertProduct', async (req, res) =>{

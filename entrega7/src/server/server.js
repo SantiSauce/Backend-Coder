@@ -56,7 +56,9 @@ app.use(passport.session())
 
 //handlebars config
 app.engine('handlebars', handlebars.engine({
-    defaultLayout: 'main.handlebars'}
+    defaultLayout: 'main.handlebars'
+
+}
     ))
 app.set('views', __dirname + '/views')
 app.set('partials', __dirname + '/partials')
@@ -64,6 +66,7 @@ app.set('view engine', 'handlebars')
 app.use('/css', express.static(__dirname +'/public/css' ))
 
 //routes
+
 app.use('/home', auth, productViews)
 app.use('/carts', cartViews)
 app.use('/chat', messagesViews)
@@ -73,6 +76,8 @@ app.use("/api/home", productRouter)
 app.use("/api/carts", cartRouter)
 app.use("/api/messages", messagesRouter)
 app.use('/api/sessions', sessionRouter)
+
+app.locals.user = 
 
 //server
 app.get('/', (req, res) =>{ res.send('Work great!')})

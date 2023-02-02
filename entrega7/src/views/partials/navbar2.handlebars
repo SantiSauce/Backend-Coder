@@ -8,11 +8,16 @@
       <nav class="nav-link">
         <ul>
           <li><a href="/home">home</a></li> 
+          {{#if activeSession}}
+          <li><a href="/api/sessions/logout">log out</a></li>
+          {{else}}
           <li><a href="/sessions/register">sign in</a></li>
           <li><a href="/sessions/login">log in</a></li>
           <li><a href="/api/sessions/login-github">github log in</a></li>
-          <li><a href="/api/sessions/logout">log out</a></li>
+          {{/if}}
+          {{#if admin}}
           <li><a href="/sessions/admin">admin</a></li>
+          {{/if}}
           <li><a href="#blogs">blogs</a></li>
         </ul>
       </nav>
@@ -31,10 +36,15 @@
           </div>
         </div>
         <!-- icon-search & search-box end -->
+        <div class="icon-user-navbar">
+          <input type="checkbox" />
+          <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+        </div>
         <!-- icon-cart-navbar & cart-box start -->
         <div class="icon-cart-navbar">
           <input type="checkbox" />
-          <i class="fa-solid fa-cart-shopping"></i>
+          <i class="fa-sharp fa-solid fa-user"></i>
           <div class="cart-box">
             <div class="cart-container">
               <div class="cart-list">
@@ -303,9 +313,11 @@ body {
 
 .icon-navbar i {
   font-size: 1.2rem;
+  margin-right: 15px;
 }
 
 .icon-search-navbar,
+.icon-user-navbar,
 .icon-cart-navbar,
 .icon-menu-navbar {
   position: relative;
@@ -320,6 +332,7 @@ body {
 
 /* icon-navbar checkbox style */
 .icon-search-navbar input[type='checkbox'],
+.icon-user-navbar input[type='checkbox'],
 .icon-cart-navbar input[type='checkbox'],
 .icon-menu-navbar input[type='checkbox'] {
   position: absolute;
@@ -331,6 +344,7 @@ body {
 }
 
 .icon-search-navbar input[type='checkbox']:hover ~ i,
+.icon-user-navbar input[type='checkbox']:hover ~ i,
 .icon-cart-navbar input[type='checkbox']:hover ~ i,
 .icon-menu-navbar input[type='checkbox']:hover ~ i {
   color: var(--special-text-color);

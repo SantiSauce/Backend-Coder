@@ -23,10 +23,6 @@ router.post('/login', passport.authenticate('login', {failureRedirect:'/faillogi
     req.session.user = req.user
     res.redirect('/home')
 
-    sendData = async() => {
-        let admin = true;
-        return PartialView('navbar',admin)
-    }
 })
 
 //logout
