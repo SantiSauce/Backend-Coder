@@ -27,7 +27,8 @@ const initializePassport = () => {
                     first_name: profile._json.name,
                     last_name:'',
                     email: profile._json.email,
-                    password: ''
+                    password: '',
+                    rol: 'admin'
                 }
                 const result = await usersModel.create(newUser)
                 return done(null, result)
@@ -47,6 +48,17 @@ const initializePassport = () => {
                     console.log('User already exists');
                     return done(null, false)
                 }
+                if(user.email == 'adminCoder@coder.com'){
+                    const newUser = {
+                        first_name,
+                        last_name,
+                        email,
+                        password:createHash(password),
+                        rol: 'admin'
+                    }
+                    let result = await usersModel.create(newUser)
+                    return done(null, result)
+                }
                 const newUser = {
                     first_name,
                     last_name,
@@ -55,6 +67,7 @@ const initializePassport = () => {
                 }
                 let result = await usersModel.create(newUser)
                 return done(null, result)
+
             } catch (error) {
                 return done('Error when looking for user'+error)                
             }

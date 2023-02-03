@@ -8,6 +8,7 @@ const router = Router()
 
 //create
 router.post('/register', passport.authenticate('register', {failureRedirect:'failregister'}), async (req, res)=>{
+
     res.redirect('/sessions/login')
 })
  

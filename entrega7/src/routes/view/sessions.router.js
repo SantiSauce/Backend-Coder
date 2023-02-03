@@ -6,9 +6,7 @@ const router = Router()
 
 
 router.get('/register', async (req, res)=>{
-
-    res.render('sessions/register', {})
- 
+    res.render('sessions/register', {}) 
 })
 
 router.get('/login', async (req, res) => {
@@ -16,7 +14,8 @@ router.get('/login', async (req, res) => {
 })
 
 router.get('/admin', async(req, res) => {
-    res.render('admin')
+    const users = await usersModel.find().lean()
+    res.render('admin', {users})
 })
 
 
