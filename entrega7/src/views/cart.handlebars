@@ -1,4 +1,10 @@
+
 <div class="body">
+  <div class="product-label">
+  <div class="label-text">
+    <h1>My Cart</h1>
+  </div>
+</div>
   <div class="card">
     <div class="header">
      <h4>Shopping Cart :
@@ -47,20 +53,20 @@
     margin:0;
   font-family:arial;
     background:#d7dbe0;
-  }
+      background-color: rgb(19, 23, 32);
+}
+  
   .card{
     border-radius:10px;
-    background:white;
     
     width:800px;
-    border:1px solid #e3e6ea;
    margin:auto;
     margin-top:30px;
     margin-bottom: 30px;
   }
   .header{
     width:90%;
-    color:#5E6989;
+    color:rgb(177, 135, 81);
     font-size:22px;
     text-align: center;
   
@@ -75,6 +81,7 @@
     justify-content:space-between;
     padding:2% 5%;
     border-top:1px solid  #e3e6ea;
+    margin: auto;
     
     
   }
@@ -92,26 +99,22 @@
     text-align: center;
   float: right;
   display: inline-block;
-  height: 20px;
   width: 100px;
   margin: 0 40px 0 16px;
   box-sizing: border-box;
   border: transparent;
-  border-radius: 60px;
   font-family: 'Raleway', sans-serif;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: #ffffff;
-  background-color: #9cebd5;
   cursor: pointer;
   outline: none;
   }
   .name{
     font-size:18px;
     margin-bottom:10px;
-    color:#525354;
   }
   .color{
     color:darkgray;
@@ -120,7 +123,6 @@
   .plus,.minus{
     color:#AAB8C2;
     font-size:28px;
-    background:#E1E8EE;
   width:25px;
     height:25px;
     display:flex;
@@ -138,6 +140,21 @@
   .red{
       color:red
   }
+  .label-text h1{
+  font-size: 20px;
+}
+.product-label h1{
+  margin: 0;
+  text-align: center;
+}
+.product-label{
+  margin-top: 10px;
+  color: white;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
 
 <script>

@@ -7,23 +7,17 @@
       <!-- nav-link start -->
       <nav class="nav-link">
         <ul>
-          <li><a href="/home">home</a></li> 
           {{#if activeSession}}
-          <li><a href="/api/sessions/logout">log out</a></li>
           {{else}}
           <li><a href="/sessions/register">sign in</a></li>
           <li><a href="/sessions/login">log in</a></li>
           <li><a href="/api/sessions/login-github">github log in</a></li>
           {{/if}}
-          {{#if admin}}
-          <li><a href="/sessions/admin">admin</a></li>
-          {{/if}}
-          <li><a href="#blogs">blogs</a></li>
         </ul>
       </nav>
       <!-- nav-link end -->
       <!-- icon-navbar start -->
-      <div class="icon-navbar">
+       <div class="icon-navbar">
         <!-- icon-search & search-box start -->
         <div class="icon-search-navbar">
           <input type="checkbox" />
@@ -37,92 +31,60 @@
         </div>
         <!-- icon-search & search-box end -->
         <div class="icon-user-navbar">
-          <input type="checkbox" />
+          <a href="/carts/63cc33f324857456db42c390"><input type="checkbox" /></a>
           <i class="fa-solid fa-cart-shopping"></i>
         </div>
         </div>
+     
         <!-- icon-cart-navbar & cart-box start -->
+        {{#if activeSession}}
         <div class="icon-cart-navbar">
           <input type="checkbox" />
           <i class="fa-sharp fa-solid fa-user"></i>
           <div class="cart-box">
             <div class="cart-container">
               <div class="cart-list">
-                <figure class="cart-item">
-                  <img src="https://i.postimg.cc/3NJC7VrS/list-1.jpg" alt="Item Image" />
-                </figure>
+                
                 <figcaption class="cart-detail">
-                  <p>cart item 01</p>
-                  <p>idr. 115k</p>
+                  <p>My Profile</p>
                 </figcaption>
-                <div class="icon-remove-x" title="Remove Item">
-                  <button type="submit">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
+               
               </div>
               <div class="cart-list">
-                <figure class="cart-item">
-                  <img src="https://i.postimg.cc/tCFPw9zq/list-2.jpg" alt="Item Image" />
-                </figure>
+                
                 <figcaption class="cart-detail">
-                  <p>cart item 02</p>
-                  <p>idr. 115k</p>
-                </figcaption>
-                <div class="icon-remove-x" title="Remove Item">
-                  <button type="submit">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
+                  <p>Compras</p>
+                </figcaption>                
               </div>
               <div class="cart-list">
-                <figure class="cart-item">
-                  <img src="https://i.postimg.cc/wjvqJVMC/list-3.jpg" alt="Item Image" />
-                </figure>
+                
                 <figcaption class="cart-detail">
-                  <p>cart item 03</p>
-                  <p>idr. 115k</p>
+                  <p>Chat</p>
                 </figcaption>
-                <div class="icon-remove-x" title="Remove Item">
-                  <button type="submit">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
               </div>
+                {{#if admin}}
               <div class="cart-list">
-                <figure class="cart-item">
+                <!--<figure class="cart-item">
                   <img src="https://i.postimg.cc/9Mt5sRzP/list-4.jpg" alt="Item Image" />
-                </figure>
+                </figure>-->
                 <figcaption class="cart-detail">
-                  <p>cart item 04</p>
-                  <p>idr. 115k</p>
-                </figcaption>
-                <div class="icon-remove-x" title="Remove Item">
-                  <button type="submit">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
+                  <p>Admin</p>
+                </figcaption>                
               </div>
+              {{/if}}
               <div class="cart-list">
-                <figure class="cart-item">
-                  <img src="https://i.postimg.cc/vBGSgPH9/list-5.jpg" alt="Item Image" />
-                </figure>
                 <figcaption class="cart-detail">
-                  <p>cart item 05</p>
-                  <p>idr. 115k</p>
+                  <p>empty</p>
                 </figcaption>
-                <div class="icon-remove-x" title="Remove Item">
-                  <button type="submit">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
+                
               </div>
             </div>
             <div class="cart-checkout">
-              <button type="submit">checkout now</button>
+              <a href="/api/sessions/logout"><button type="submit">Log Out</button></a>
             </div>
           </div>
         </div>
+        {{else}}
         <!-- icon-cart-navbar & cart-box end -->
         <!-- icon-bar-menu & side-nav start -->
         <div class="icon-menu-navbar">
@@ -140,6 +102,7 @@
             </ul>
           </nav>
         </div>
+        {{/if}}
         <!-- icon-bar-menu & side-nav end -->
       </div>
       <!-- icon-navbar end -->
@@ -612,12 +575,12 @@ body {
 
   /* cart-box is child from icon-cart-navbar */
   .cart-box {
-    width: 36%;
-    height: 490px;
+    width: 20%;
+    height: 280px;
   }
 
   .cart-container {
-    height: 352px;
+    height: 180px;
   }
 
   .cart-item {

@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import { cartMongoManager } from '../../dao/DBManagers/index.js'
+import { verificarAdmin } from '../../public/js/verificarAdmin.js'
 
 const router = Router()
 
@@ -16,7 +17,10 @@ router.get('/:id', async (req, res) => {
      console.log(cart);
      const cartProducts = cart.products.map(e => e.product)
 
-     res.render('cart', {cartProducts})
+     let adminSession = verificarAdmin(req)
+    let { activeSession, admin } = adminSession;
+
+     res.render('cart', {cartProducts, admin, activeSession})
 })
 
 export { router as cartViews}

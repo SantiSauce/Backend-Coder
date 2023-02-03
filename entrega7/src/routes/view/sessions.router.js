@@ -12,7 +12,7 @@ router.get('/register', async (req, res)=>{
 })
 
 router.get('/login', async (req, res) => {
-    res.render('sessions/login', {})
+    res.render('sessions/login',{})
 })
 
 router.get('/admin', async(req, res) => {
