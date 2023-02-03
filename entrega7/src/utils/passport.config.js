@@ -48,7 +48,7 @@ const initializePassport = () => {
                     console.log('User already exists');
                     return done(null, false)
                 }
-                if(user.email == 'adminCoder@coder.com'){
+                if(email == 'adminCoder@coder.com'){
                     const newUser = {
                         first_name,
                         last_name,
