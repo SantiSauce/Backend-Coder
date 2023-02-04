@@ -15,6 +15,7 @@ import { messagesViews } from "../routes/index.js"
 import { messagesRouter } from "../routes/api/messages.router.js"
 import { sessionViews } from "../routes/index.js"
 import messageModel from "../dao/models/messagges.model.js"
+import { verificarAdmin } from "../public/js/verificarAdmin.js";
 
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
@@ -67,7 +68,7 @@ app.use('/css', express.static(__dirname +'/public/css' ))
 
 //routes
 
-app.use('/home', auth, productViews)
+app.use('/products', auth, productViews)
 app.use('/carts', cartViews)
 app.use('/chat', messagesViews)
 app.use('/sessions', sessionViews)
@@ -80,7 +81,16 @@ app.use('/api/sessions', sessionRouter)
 app.locals.user = 
 
 //server
-app.get('/', (req, res) =>{ res.send('Work great!')})
+app.get('/', (req, res) =>{ 
+    if(req.session.user){
+        let adminSession = verificarAdmin(req)
+        let { activeSession, admin } = adminSession;
+        res.render('home', {activeSession, admin})
+    }
+    else{
+        res.redirect('/sessions/login')
+    }
+})
 const PORT = 8082
 const server = httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

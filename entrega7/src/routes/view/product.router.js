@@ -6,7 +6,7 @@ import { verificarAdmin } from '../../public/js/verificarAdmin.js'
 
 const router = Router()
 
-router.get('/', async (req, res) => {
+router.get('/allProducts', async (req, res) => {
 
     const limit = req.query?.limit || 8
     const page = req.query?.page || 1
@@ -20,8 +20,8 @@ router.get('/', async (req, res) => {
 
     const products = await productMongoManager.getProducts(filter, search, options)
 
-    products.prevLink = (products.hasPrevPage) ? `/home?page=${products.prevPage}` : '' 
-    products.nextLink = (products.hasNextPage) ? `/home?page=${products.nextPage}` : '' 
+    products.prevLink = (products.hasPrevPage) ? `/products?page=${products.prevPage}` : '' 
+    products.nextLink = (products.hasNextPage) ? `/products?page=${products.nextPage}` : '' 
 
     
     const user = req.session.user
@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
     }
     
 
-    res.render('home', {response, user, admin, activeSession})
+    res.render('allProducts', {response, user, admin, activeSession})
 })
 
 router.get('/insertProduct', async (req, res) =>{
@@ -60,9 +60,11 @@ router.get('/insertProduct', async (req, res) =>{
 })
 
 router.get('/:id', async (req, res) =>{
+    let adminSession = verificarAdmin(req)
+    let { activeSession, admin } = adminSession;
     const product = await productMongoManager.getProductById(req.params.id)
     console.log(product)
-    res.render('oneProduct', {product})
+    res.render('oneProduct', {product, activeSession, admin})
 })
 
 export { router as productViews}

@@ -44,7 +44,7 @@ router.get(
     async(req, res) => {
         console.log('callback:', req.user);
         req.session.user = req.user
-        res.redirect ('/home')  
+        res.redirect ('/')  
 }
 )
 export {router as sessionRouter}

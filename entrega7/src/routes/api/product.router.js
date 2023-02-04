@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
         prevLink: products.prevLink,
         nextLink: products.nextLink
     }
-    res.json(result)   
+    res.json(result)    
 
 })//falta ordenar por price, y si (query = stock ) => deberia mostrar todos los productos menos los que tengan stock = 0
 
@@ -60,6 +60,7 @@ router.put('/:id', async(req, res) =>{
     const productUpdated = await productMongoManager.updateProduct(req.params.id, req.body)
     res.json(productUpdated)
 })
+
 
 
 export { router as productRouter}
