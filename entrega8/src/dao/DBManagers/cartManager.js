@@ -125,6 +125,11 @@ export class cartManagerDB {
         }  
     }
 
+    getLastCart = async () => {
+        const carts = await this.getCarts()
+        const lastCart = carts.pop()
+        return lastCart._id
+    }
 
 
 

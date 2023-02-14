@@ -1,5 +1,6 @@
 import usersModel from "../models/users.model.js"
-
+import cartModel from "../models/carts.model.js"
+import { cartMongoManager } from "./index.js"
 export class userManagerDB {
 
     getAllUsers = async () => {
@@ -15,7 +16,6 @@ export class userManagerDB {
             console.log(error);
         }
     }
-
 
     getUserByEmail = async(email) =>{
 
@@ -36,6 +36,15 @@ export class userManagerDB {
         }
     }
 
+    createUserCart = async () => {
+        await cartMongoManager.addCart()
+        const carts = await cartMongoManager.getCarts()
+        const lastCart = carts.pop()
+        return lastCart._id
+    }
+    
+   
+  
 
 
 

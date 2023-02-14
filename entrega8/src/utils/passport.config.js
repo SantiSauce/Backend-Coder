@@ -1,11 +1,24 @@
 import passport from "passport";
 import local from "passport-local"
-import usersModel from "../dao/models/users.model.js";
+import jwt from 'passport-jwt'
 import GitHubStrategy from 'passport-github2'
-import {createHash, isValidPassword} from "../dirname.js"
+
+import {createHash, isValidPassword} from "../utils/utils.js"
+import { generateToken, authToken } from "../utils/utils.js";
+import { extractCookie } from "../utils/utils.js";
+
 import { userMongoManager } from "../dao/DBManagers/index.js";
+import usersModel from "../dao/models/users.model.js";
+
+import { COOKIE_NAME_JWT } from "../utils/credentials.js";
+import { JWT_PRIVATE_KEY } from "../utils/credentials.js";
+
 
 const LocalStrategy = local.Strategy
+
+const JTWStrategy = jwt.Strategy
+const ExtractJWT = jwt.ExtractJwt
+
 const initializePassport = () => {
 
     passport.use('github', new GitHubStrategy(
@@ -33,15 +46,15 @@ const initializePassport = () => {
                 const result = await usersModel.create(newUser)
                 return done(null, result)
             } catch (error) {
-                return done('error github login' + error)
+                return done('error github login' + error) 
             }
         }
     ))
-
-
-    passport.use('register', new LocalStrategy(
-        {passReqToCallback: true, usernameField: 'email'}, async (req, username, password, done) => {
-            const {first_name, last_name, email} = req.body
+    passport.use('register', new LocalStrategy({
+        passReqToCallback: true,
+        usernameField: 'email'
+    }, async (req, username, password, done) => {
+            const {first_name, last_name, age, email} = req.body
             try {
                 let user = await usersModel.findOne({email:username})
                 if(user) {
@@ -52,6 +65,7 @@ const initializePassport = () => {
                     const newUser = {
                         first_name,
                         last_name,
+                        age,
                         email,
                         password:createHash(password),
                         rol: 'admin'
@@ -59,11 +73,14 @@ const initializePassport = () => {
                     let result = await usersModel.create(newUser)
                     return done(null, result)
                 }
+                const cart = await userMongoManager.createUserCart()
                 const newUser = {
                     first_name,
                     last_name,
                     email,
-                    password:createHash(password)
+                    age,
+                    cart: cart,
+                    password:createHash(password) 
                 }
                 let result = await usersModel.create(newUser)
                 return done(null, result)
@@ -72,24 +89,34 @@ const initializePassport = () => {
                 return done('Error when looking for user'+error)                
             }
         }))
-    passport.use('login', new LocalStrategy({usernameField: 'email'}, async(username, password, done) =>{
-
+    passport.use('login', new LocalStrategy({
+        usernameField: 'email'
+    }, async(username, password, done) =>{
             try {
-                const user = await usersModel.findOne({email:username})
+                const user = await usersModel.findOne({email:username}).lean().exec()
                 if(!user) {
                     console.log('User does not exist');
                     return done(null, false)
                 }
+
                 if(!isValidPassword(user, password)) return done (null, false)
+                const token = generateToken(user)
+                user.token = token
                 return done(null, user)
             } catch (error) {
                 return done(null, user)
             }
         }))
-        passport.serializeUser((user, done)=>{
+    passport.use('jwt', new JTWStrategy({
+            jwtFromRequest: ExtractJWT.fromExtractors([extractCookie]),
+            secretOrKey: JWT_PRIVATE_KEY
+        }, async (jwt_payload, done) => {
+            done(null, jwt_payload)
+        }))
+    passport.serializeUser((user, done)=>{
             done(null, user._id)
         })
-        passport.deserializeUser(async (id, done)=>{
+    passport.deserializeUser(async (id, done)=>{
             let user = await usersModel.findById(id)
             done(null, user)
         })

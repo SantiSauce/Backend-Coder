@@ -31,7 +31,7 @@
         </div>
         <!-- icon-search & search-box end -->
         <div class="icon-user-navbar">
-          <a href="/carts/63cc33f324857456db42c390"><input type="checkbox" /></a>
+          <a href="/carts/{{user.cart._id}}"><input type="checkbox" /></a>
           <i class="fa-solid fa-cart-shopping"></i>
         </div>
         </div>
@@ -64,12 +64,14 @@
               </div>
                 {{#if admin}}
               <div class="cart-list">
-                <!--<figure class="cart-item">
-                  <img src="https://i.postimg.cc/9Mt5sRzP/list-4.jpg" alt="Item Image" />
-                </figure>-->
                 <figcaption class="cart-detail">
                   <a href="/sessions/admin"><p>Admin</p></a>
-                </figcaption>                
+                </figcaption>                                
+              </div>
+              <div class="cart-list">
+                <figcaption class="cart-detail">
+                  <a href="/products/insertProduct"><p>InsertProduct</p></a>
+                </figcaption>                                
               </div>
               {{/if}}
               <div class="cart-list">

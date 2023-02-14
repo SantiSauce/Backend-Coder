@@ -30,7 +30,7 @@ router.post('/:cid/product/:pid', async(req, res) => {
 
        try {
         await cartMongoManager.addProductToCart(req.params.cid, req.params.pid)
-        res.json("Product added to cart")
+        res.json("Product added to cart").redirect('/')
        } catch (error) {
         console.log(error);
         res.status(404).send({status: "error", error: "Cart not found"})

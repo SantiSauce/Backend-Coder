@@ -12,9 +12,11 @@
     <div class="icons">
       <a href="#"><i class="ion-star"></i></a>
       <a href="#"> <i class="ion-share"></i></a>
-      <a href="#"> <i class="ion-search"></i></a>
+      <a href="#"> <i class="ion-search"></i></a> 
     </div>
-    <a href="#" class="add-to-cart">Add to Cart</a>
+    <input type="button" class="add-to-cart" onclick="something()" value="Add product to cart">
+
+    <!-- <a href="/carts/{{response.user.cart._id}}" class="add-to-cart">Add to Cart</a> -->
   </div>
   <figcaption>
     <a linkRef="http://"></a>
@@ -48,6 +50,18 @@
       html: `<h2>{{response.user.first_name}} {{response.user.last_name}}</h2>`
       })
     }    
+
+    function something (){
+      window.location.href = 'localhost:8082'
+    }
+
+
+
+
+   
+
+
+
   </script>
 <style>
 
@@ -212,6 +226,7 @@ p, li, a{
   font-weight: 700;
   text-decoration: none;
   text-transform: uppercase;
+  width: 270px;
 }
 .snip1268 .add-to-cart:hover {
   background: #363333;

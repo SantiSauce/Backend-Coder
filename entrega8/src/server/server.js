@@ -1,5 +1,7 @@
 import express from "express"
 import handlebars from 'express-handlebars'
+import { Server as IOServer} from 'socket.io'
+import { Server as HttpServer } from 'http'
 import { connectDB } from "./mongo/mongo.js";
 import __dirname from '../dirname.js'
 import bodyParser from 'body-parser'
@@ -19,20 +21,18 @@ import { verificarAdmin } from "../public/js/verificarAdmin.js";
 
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
-import { Server as IOServer} from 'socket.io'
-import { Server as HttpServer } from 'http'
+
+import { passportCall } from "../utils/utils.js";
 
 
 
-//const
 const app = express()
+
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
 
-//initialize passport
 initializePassport();
 
-//mongo conecct
 connectDB()
 const MONGO_URI= 'mongodb+srv://santisauce:santisauce@integrador.1sndrvg.mongodb.net/?retryWrites=true&w=majority'
 
@@ -49,6 +49,7 @@ app.use(session({
         },
     }),
     secret: 'ilovegin',
+    ttl: 100,
     resave: true,
     saveUninitialized: true
 }))
@@ -68,7 +69,7 @@ app.use('/css', express.static(__dirname +'/public/css' ))
 
 //routes
 
-app.use('/products', auth, productViews)
+app.use('/products', passportCall('jwt'),  productViews)
 app.use('/carts', cartViews)
 app.use('/chat', messagesViews)
 app.use('/sessions', sessionViews)
@@ -78,19 +79,20 @@ app.use("/api/carts", cartRouter)
 app.use("/api/messages", messagesRouter)
 app.use('/api/sessions', sessionRouter)
 
-app.locals.user = 
 
 //server
 app.get('/', (req, res) =>{ 
     if(req.session.user){
         let adminSession = verificarAdmin(req)
         let { activeSession, admin } = adminSession;
-        res.render('home', {activeSession, admin})
+        const user = req.session?.user
+        res.render('home', {activeSession, admin, user})
     }
     else{
         res.redirect('/sessions/login')
     }
 })
+
 const PORT = 8082
 const server = httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
@@ -110,20 +112,6 @@ io.on('connection', (socket) => {
     })
     
 })
-
-
-
-//app.use(express.json())
-
-
-
-//app.set("io", io);
-
-
-
-
-
- 
 
 
 

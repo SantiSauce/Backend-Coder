@@ -2,13 +2,12 @@ import { Router } from "express"
 import session from "express-session"
 import passport from "passport"
 import usersModel from "../../dao/models/users.model.js"
-import { createHash, isValidPassword } from '../../dirname.js'
+import COOKIE_NAME_JWT from '../../utils/credentials.js'
 
 const router = Router()
 
-//create
+//register
 router.post('/register', passport.authenticate('register', {failureRedirect:'failregister'}), async (req, res)=>{
-
     res.redirect('/sessions/login')
 })
  
@@ -18,11 +17,11 @@ router.get('/failregister', async(req, res) =>{
 })
 
 //login
-router.post('/login', passport.authenticate('login', {failureRedirect:'/faillogin'}), async (req, res) => {
+router.post('/login', passport.authenticate('login', {failureRedirect:'/faillogin'}), (req, res) => {
     if(!req.user) return res.status(400).send({status: 'error', error: 'Invalid credentials'})
 
     req.session.user = req.user
-    res.redirect('/home')
+    res.cookie(COOKIE_NAME_JWT, req.user.token).redirect('/')
 
 })
 

@@ -20,11 +20,11 @@ router.get('/allProducts', async (req, res) => {
 
     const products = await productMongoManager.getProducts(filter, search, options)
 
-    products.prevLink = (products.hasPrevPage) ? `/products?page=${products.prevPage}` : '' 
-    products.nextLink = (products.hasNextPage) ? `/products?page=${products.nextPage}` : '' 
+    products.prevLink = (products.hasPrevPage) ? `/products/allProducts?page=${products.prevPage}` : '' 
+    products.nextLink = (products.hasNextPage) ? `/products/allProducts?page=${products.nextPage}` : '' 
 
     
-    const user = req.session.user
+    const user = req.session?.user
     if(user.email === 'adminCoder@coder.com'){
         req.session.user.rol = 'admin'
     }
@@ -50,13 +50,16 @@ router.get('/allProducts', async (req, res) => {
         prevLink: products.prevLink,
         nextLink: products.nextLink
     }
-    
+    console.log('hola');
+    console.log(response.user.cart._id);
 
     res.render('allProducts', {response, user, admin, activeSession})
 })
 
 router.get('/insertProduct', async (req, res) =>{
-    res.render('insertProduct', {})
+    let adminSession = verificarAdmin(req)
+    let { activeSession, admin } = adminSession;
+    res.render('insertProduct', {activeSession, admin})
 })
 
 router.get('/:id', async (req, res) =>{
