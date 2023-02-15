@@ -8,6 +8,7 @@ import bodyParser from 'body-parser'
 import session from "express-session"
 import MongoStore from "connect-mongo"
 import auth from "../utils/auth.js";
+import cookieParser from "cookie-parser";
 
 import {productRouter, sessionRouter} from '../routes/index.js'
 import {productViews} from '../routes/index.js'
@@ -18,6 +19,8 @@ import { messagesRouter } from "../routes/api/messages.router.js"
 import { sessionViews } from "../routes/index.js"
 import messageModel from "../dao/models/messagges.model.js"
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
+
+import { COOKIE_SECRET } from "../utils/credentials.js";
 
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
@@ -31,7 +34,6 @@ const app = express()
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
 
-initializePassport();
 
 connectDB()
 const MONGO_URI= 'mongodb+srv://santisauce:santisauce@integrador.1sndrvg.mongodb.net/?retryWrites=true&w=majority'
@@ -40,6 +42,7 @@ const MONGO_URI= 'mongodb+srv://santisauce:santisauce@integrador.1sndrvg.mongodb
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(cookieParser(COOKIE_SECRET))
 app.use(session({
     store: MongoStore.create({
         mongoUrl: MONGO_URI,
@@ -53,6 +56,8 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+
+initializePassport();
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -69,7 +74,7 @@ app.use('/css', express.static(__dirname +'/public/css' ))
 
 //routes
 
-app.use('/products', passportCall('jwt'),  productViews)
+app.use('/products',passportCall('jwt'),  productViews)
 app.use('/carts', cartViews)
 app.use('/chat', messagesViews)
 app.use('/sessions', sessionViews)

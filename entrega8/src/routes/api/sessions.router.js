@@ -1,13 +1,11 @@
 import { Router } from "express"
-import session from "express-session"
 import passport from "passport"
-import usersModel from "../../dao/models/users.model.js"
-import COOKIE_NAME_JWT from '../../utils/credentials.js'
+import {COOKIE_NAME_JWT} from '../../utils/credentials.js'
 
 const router = Router()
 
 //register
-router.post('/register', passport.authenticate('register', {failureRedirect:'failregister'}), async (req, res)=>{
+router.post('/register', passport.authenticate('register', {failureRedirect:'failregister'}), (req, res)=>{
     res.redirect('/sessions/login')
 })
  
@@ -27,8 +25,10 @@ router.post('/login', passport.authenticate('login', {failureRedirect:'/faillogi
 
 //logout
 router.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/sessions/login')
+    req.session.destroy(err => {
+        if(err) return res.status(500).render('error', {error: err})
+        res.clearCookie(COOKIE_NAME_JWT).redirect('/sessions/login')
+    })
 })
 
 router.get(
@@ -46,4 +46,8 @@ router.get(
         res.redirect ('/')  
 }
 )
+
+router.get('/current', async (req, res) => {
+    res.send(req.session.user)
+})
 export {router as sessionRouter}

@@ -4,13 +4,12 @@ import jwt from 'passport-jwt'
 import GitHubStrategy from 'passport-github2'
 
 import {createHash, isValidPassword} from "../utils/utils.js"
-import { generateToken, authToken } from "../utils/utils.js";
+import { generateToken } from "../utils/utils.js";
 import { extractCookie } from "../utils/utils.js";
 
 import { userMongoManager } from "../dao/DBManagers/index.js";
 import usersModel from "../dao/models/users.model.js";
 
-import { COOKIE_NAME_JWT } from "../utils/credentials.js";
 import { JWT_PRIVATE_KEY } from "../utils/credentials.js";
 
 
@@ -50,6 +49,7 @@ const initializePassport = () => {
             }
         }
     ))
+    
     passport.use('register', new LocalStrategy({
         passReqToCallback: true,
         usernameField: 'email'

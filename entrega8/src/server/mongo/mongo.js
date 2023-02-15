@@ -1,9 +1,9 @@
 import { connect, set } from "mongoose";
-
+import { MONGO_URI } from "../../utils/credentials.js";
 export const connectDB = async () => {
     try {
       set("strictQuery", false);
-      await connect('mongodb+srv://santisauce:santisauce@integrador.1sndrvg.mongodb.net/?retryWrites=true&w=majority');
+      await connect(MONGO_URI);
   
       console.log("Connected to DB");
     } catch (error) {
