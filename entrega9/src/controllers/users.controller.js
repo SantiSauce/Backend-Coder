@@ -19,27 +19,12 @@ export const createUserCart = async () => {
     await UsersService.createUserCart()
 }
 
-export const getRegister = async(req, res) => {
-    try {
-        res.render('register')
-    } catch (error) {
-        console.log(error);        
-    }
-}
-
-export const getLogIn = async(req, res) => {
-    try {
-        res.render('login')
-    } catch (error) {
-        console.log(error);        
-    }
-} 
 
 export const logOutUser = async(req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(500).render("errors", { error: err });
     
-        res.clearCookie(process.env.COOKIE_NAME_JWT).redirect("/sessions/login");
+        res.clearCookie(process.env.COOKIE_NAME_JWT).redirect("/home/login");
 })
 }
 
@@ -70,9 +55,3 @@ export const postGitHubCallBack = async(req, res) => {
     res.redirect ('/')  
 }
 
-export const showAdminView = async (req, res) => {
-    let adminSession = verificarAdmin(req)
-    let { activeSession, admin } = adminSession;
-    const users =  UsersService.getAllUsers()
-    res.render('admin', {users, activeSession, admin})
-}

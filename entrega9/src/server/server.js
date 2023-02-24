@@ -24,6 +24,7 @@ import usersRouter from '../routes/users.router.js'
 import sessionRouter from '../routes/session.router.js'
 import viewsRouter from '../routes/views.router.js'
 
+import { showHomeView } from "../controllers/views.controller.js";
 
 
 
@@ -79,12 +80,13 @@ app.use('/api/carts', cartsRouter)
 
 app.use('/api/sessions', sessionRouter)
 
-app.use('/', viewsRouter)
-
-app.use('/', usersRouter)
-
+app.use('/home', viewsRouter)
 
 //server
+
+app.get('/', async(req, res) => {
+    res.render('home')
+})
 
 const server = httpServer.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`)

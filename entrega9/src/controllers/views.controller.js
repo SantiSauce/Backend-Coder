@@ -68,6 +68,29 @@ export const showHomeView = async(req, res) => {
         res.render('home', {activeSession, admin, user})
     }
     else{
-        res.render('login')
+        res.json('error')
     }
+}
+
+export const getRegister = async(req, res) => {
+    try {
+        res.render('register')
+    } catch (error) {
+        console.log(error);        
+    }
+}
+
+export const getLogIn = async(req, res) => {
+    try {
+        res.render('login')
+    } catch (error) {
+        console.log(error);        
+    }
+} 
+
+export const showAdminView = async (req, res) => {
+    let adminSession = verificarAdmin(req)
+    let { activeSession, admin } = adminSession;
+    const users =  UsersService.getAllUsers()
+    res.render('admin', {users, activeSession, admin})
 }

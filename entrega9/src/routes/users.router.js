@@ -1,12 +1,9 @@
 import { Router } from "express";
 import {
-    getRegister,
-    getLogIn,
     logOutUser,
     postRegister,
     postLogIn,
-    postGitHubCallBack,
-    showAdminView
+    postGitHubCallBack
 } from '../controllers/users.controller.js'
 import passport from "passport";
 
@@ -24,10 +21,6 @@ router.get('/login-github', passport.authenticate('github', {scope: ['user:email
 
 //view
 
-router.get('/register', getRegister)
 
-router.get('/login', getLogIn)
-
-router.get('/admin', showAdminView)
 
 export default Router
