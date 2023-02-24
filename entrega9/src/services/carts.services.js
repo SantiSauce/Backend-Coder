@@ -1,5 +1,5 @@
-import cartModel from "../models/carts.model.js"
-import productModel from "../models/product.model.js"
+import cartModel from '../dao/models/carts.model.js'
+import productModel from '../dao/models/users.model.js'
 
 class CartsServices { 
 
@@ -25,7 +25,7 @@ class CartsServices {
         const newCart = {products: []}
         const createdCart = new cartModel(newCart)
         await createdCart.save()
-        console.log("El carrito se ha ingresado correctamente")
+        console.log("El carrito se ha creado correctamente")
         }
 
     addProductToCart = async (id, productId) =>{
@@ -135,4 +135,4 @@ class CartsServices {
 }
 
 
-export const CartServices = new CartsServices();
+export const CartService = new CartsServices();

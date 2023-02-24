@@ -10,13 +10,6 @@ import MongoStore from "connect-mongo"
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'
 
-import {productRouter, sessionRouter} from '../routes/index.js'
-import {productViews} from '../routes/index.js'
-import {cartRouter} from '../routes/index.js'
-import {cartViews} from '../routes/index.js'
-import { messagesViews } from "../routes/index.js"
-import { messagesRouter } from "../routes/api/messages.router.js"
-import { sessionViews } from "../routes/index.js"
 import messageModel from "../dao/models/messagges.model.js"
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
 import { passportCall } from "../utils/utils.js";
@@ -24,6 +17,14 @@ import { passportCall } from "../utils/utils.js";
 
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
+
+import productsRouter from '../routes/products.router.js'
+import cartsRouter from '../routes/carts.router.js'
+import usersRouter from '../routes/users.router.js'
+import sessionRouter from '../routes/session.router.js'
+import viewsRouter from '../routes/views.router.js'
+
+
 
 
 dotenv.config()
@@ -72,29 +73,18 @@ app.use('/css', express.static(__dirname +'/public/css' ))
 
 //routes
 
-app.use('/products',passportCall('jwt'),  productViews)
-app.use('/carts', cartViews)
-app.use('/chat', messagesViews)
-app.use('/sessions', sessionViews)
+app.use('/api/products', productsRouter)
 
-app.use("/api/home", productRouter)
-app.use("/api/carts", cartRouter)
-app.use("/api/messages", messagesRouter)
+app.use('/api/carts', cartsRouter)
+
 app.use('/api/sessions', sessionRouter)
+
+app.use('/', viewsRouter)
+
+app.use('/', usersRouter)
 
 
 //server
-app.get('/', (req, res) =>{ 
-    if(req.session.user){
-        let adminSession = verificarAdmin(req)
-        let { activeSession, admin } = adminSession;
-        const user = req.session?.user
-        res.render('home', {activeSession, admin, user})
-    }
-    else{
-        res.redirect('/sessions/login')
-    }
-})
 
 const server = httpServer.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`)

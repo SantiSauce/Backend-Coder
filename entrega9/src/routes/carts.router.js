@@ -7,7 +7,8 @@ import {
     deleteProductFromCart,
     deleteAllProductsFromCart,
     updateProductsFromCart,
-    updateStock
+    updateStock,
+    getCartView
 } from '../controllers/carts.controller.js'
 
 const router = Router()
@@ -31,3 +32,6 @@ router.get('/:cid/product/:pid', updateStock)
 
 //view routes
 
+router.get('/:id', getCartView)
+
+export default Router

@@ -73,4 +73,4 @@ updateProduct = async (id, product) => {
 
 }
 
-export const ProductsServices = new ProductsServices();
+export const ProductsService = new ProductsServices();

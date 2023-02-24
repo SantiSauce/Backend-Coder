@@ -1,7 +1,8 @@
-import { ProductsServices } from "../services/products.services.js";
+import { ProductsService } from "../services/products.services.js";
+import { verificarAdmin } from "../public/js/verificarAdmin.js";
 
 export const createProducts = async (req, res) => {
-    await ProductsServices.addProduct(req.body)
+    await ProductService.addProduct(req.body)
 }
 
 export const getProducts = async (req, res) => {
@@ -15,7 +16,7 @@ export const getProducts = async (req, res) => {
 
     const options = {page, limit, lean:true}
 
-    const products = await ProductsServices.getProducts(filter, search, options)
+    const products = await ProductService.getProducts(filter, search, options)
 
     products.prevLink = (products.hasPrevPage) ? `/?page=${products.prevPage}` : '' 
     products.nextLink = (products.hasNextPage) ? `/?page=${products.nextPage}` : '' 
@@ -35,14 +36,15 @@ export const getProducts = async (req, res) => {
 }
 
 export const getProductById = async (req, res) => {
-    const products = await ProductsServices.getProductById(req.params.id)
+    const products = await ProductService.getProductById(req.params.id)
     res.json(products)
 }
 
 export const deleteProduct = async (req, res) => {
-    await ProductsServices.deleteProduct(req.params.id)
+    await ProductsService.deleteProduct(req.params.id)
 }
 
 export const updateProduct = async (req, res) => {
-    await ProductsServices.updateProduct(req.params.id, req.body)
+    await ProductsService.updateProduct(req.params.id, req.body)
 }
+

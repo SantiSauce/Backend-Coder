@@ -1,4 +1,5 @@
-import { CartServices } from "../services/carts.services";
+import { CartService } from "../services/carts.services.js";
+import { verificarAdmin } from "../public/js/verificarAdmin.js";
 
 export const createCart = async (req, res) => {
     await CartServices.addCart()
@@ -32,3 +33,20 @@ export const updateStock = async (req, res) => {
     await CartServices.updateQuantity(req.params.cid, req.params.pid, req.body)
 }
 
+export const getCartView = async(req, res) => {
+    let adminSession = verificarAdmin(req)
+    let { activeSession, admin } = adminSession;
+
+    const product = req.body
+    console.log(`product ${product}`);
+
+    try {
+        if(activeSession){
+            const user = req.session?.user
+            res.render('cart', {user, admin, activeSession}) 
+            console.log(user);   
+          }
+     } catch (error) {
+          console.log(error);
+     }
+}
