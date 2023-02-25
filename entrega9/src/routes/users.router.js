@@ -23,4 +23,4 @@ router.get('/login-github', passport.authenticate('github', {scope: ['user:email
 
 
 
-export default Router
+export {router as usersRouter}

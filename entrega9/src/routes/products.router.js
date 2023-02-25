@@ -22,4 +22,4 @@ router.put('/:id', updateProduct)
 
 
 
-export default Router
+export {router as productsRouter}

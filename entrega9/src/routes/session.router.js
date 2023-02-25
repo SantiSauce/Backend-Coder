@@ -6,4 +6,4 @@ const router = Router()
 
 router.get('/current', authToken, getCurrentUser)
 
-export default Router
+export {router as sessionRouter}

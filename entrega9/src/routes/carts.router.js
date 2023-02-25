@@ -34,4 +34,4 @@ router.get('/:cid/product/:pid', updateStock)
 
 router.get('/:id', getCartView)
 
-export default Router
+export {router as cartsRouter}

@@ -8,22 +8,23 @@ import {
     getLogIn,
     showAdminView
 } from '../controllers/views.controller.js'
+import { passportCall } from "../utils/utils.js"
 
 
 const router = Router()
 
-//router.get('/', showHomeView)
+router.get('/home', passportCall('jwt'), showHomeView)
 
-router.get('/allProducts', showAllProducts)
+router.get('/allProducts', passportCall('jwt'),showAllProducts)
 
-router.get('/insertProduct', getInsertProductView)
+router.get('/insertProduct', passportCall('jwt'), getInsertProductView)
 
-router.get('/:id', showOneProduct)
+router.get('/string/cart/:id', passportCall('jwt'),showOneProduct) 
 
 router.get('/register', getRegister)
 
-router.get('/sessions/login', getLogIn)
+router.get('/login', getLogIn)
 
-router.get('/admin', showAdminView)
+router.get('/admin', passportCall('jwt'),showAdminView)
 
-export default Router
+export { router as viewsRouter }

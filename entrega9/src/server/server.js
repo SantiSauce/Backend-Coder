@@ -18,12 +18,11 @@ import { passportCall } from "../utils/utils.js";
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
 
-import productsRouter from '../routes/products.router.js'
-import cartsRouter from '../routes/carts.router.js'
-import usersRouter from '../routes/users.router.js'
-import sessionRouter from '../routes/session.router.js'
-import viewsRouter from '../routes/views.router.js'
-
+import {productsRouter} from '../routes/products.router.js'
+import {cartsRouter} from '../routes/carts.router.js'
+import {usersRouter} from '../routes/users.router.js'
+import {sessionRouter} from '../routes/session.router.js'
+import {viewsRouter} from '../routes/views.router.js' 
 import { showHomeView } from "../controllers/views.controller.js";
 
 
@@ -80,13 +79,12 @@ app.use('/api/carts', cartsRouter)
 
 app.use('/api/sessions', sessionRouter)
 
-app.use('/home', viewsRouter)
+app.use('/', viewsRouter)
 
+app.use('/session', usersRouter)
 //server
 
-app.get('/', async(req, res) => {
-    res.render('home')
-})
+
 
 const server = httpServer.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`)

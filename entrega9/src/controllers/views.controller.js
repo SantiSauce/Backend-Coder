@@ -4,7 +4,7 @@ import { verificarAdmin } from "../public/js/verificarAdmin.js";
 export const showOneProduct = async (req, res) => {
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;
-    const product = await ProductsService.getProductById(req.params.id)
+    const product = await ProductsService.getProductById(req.params.id) 
     res.render('oneProduct', {product, activeSession, admin})
 }
 
@@ -84,7 +84,7 @@ export const getLogIn = async(req, res) => {
     try {
         res.render('login')
     } catch (error) {
-        console.log(error);        
+        console.log('hola');        
     }
 } 
 

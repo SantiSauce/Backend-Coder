@@ -1,7 +1,7 @@
 <header class="wrapper-navbar">
       <!-- brand-navbar start -->
       <div class="brand-navbar">
-        <a href="/"><img src="https://i.postimg.cc/W4PS83q9/logo-gin-store.png" alt="brand-logo"></a>
+        <a href="/home"><img src="https://i.postimg.cc/W4PS83q9/logo-gin-store.png" alt="brand-logo"></a>
       </div>
       <!-- brand-navbar end -->
       <!-- nav-link start -->
@@ -9,14 +9,14 @@
         <ul>
           {{#if activeSession}}
           {{else}}
-          <li><a href="/sessions/register">sign in</a></li>
-          <li><a href="/sessions/login">log in</a></li>
+          <li><a href="/register">sign in</a></li>
+          <li><a href="/login">log in</a></li>
           <li><a href="/api/sessions/login-github">github log in</a></li>
           {{/if}}
         </ul>
       </nav>
       <!-- nav-link end -->
-      <!-- icon-navbar start -->
+      <!-- icon-navbar start --> 
        <div class="icon-navbar">
         <!-- icon-search & search-box start -->
         <div class="icon-search-navbar">
@@ -31,7 +31,7 @@
         </div>
         <!-- icon-search & search-box end -->
         <div class="icon-user-navbar">
-          <a href="/carts/{{user.cart._id}}"><input type="checkbox" /></a>
+          <a href="/string/cart/{{user.cart._id}}"><input type="checkbox" /></a>
           <i class="fa-solid fa-cart-shopping"></i>
         </div>
         </div>
@@ -82,7 +82,7 @@
               </div>
             </div>
             <div class="cart-checkout">
-              <a href="/sessions/logout"><button type="submit">Log Out</button></a>
+              <a href="/session/logout"><button type="submit">Log Out</button></a>
             </div>
           </div>
         </div>
