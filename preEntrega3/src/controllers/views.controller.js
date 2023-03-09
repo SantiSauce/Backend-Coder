@@ -5,7 +5,7 @@ import { UserService } from "../repository/index.js";
 export const showOneProduct = async (req, res) => {
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;
-    const product = await ProductService.getById(req.params.id) 
+    const product = await ProductService.getById(req.params.pid) 
     res.render('oneProduct', {product, activeSession, admin})
 }
 
@@ -79,8 +79,6 @@ export const showHomeView = async(req, res) => {
         let { activeSession, admin } = adminSession;
         const user = req.session?.user
         res.render('home', {activeSession, admin, user})
-        console.log(user);
-        console.log('hola');
     }
     else{
         res.json('error')
@@ -112,17 +110,14 @@ export const showAdminView = async (req, res) => {
 
 export const getCartView = async(req, res) => {
     let adminSession = verificarAdmin(req)
-    let { activeSession, admin } = adminSession;
-
-    
+    let { activeSession, admin } = adminSession;    
 
     try {
         if(activeSession){
+            const cid = req.params.cid
             const user = req.session?.user
-            const cart = user.cart
-            const userCart = await CartService.getById(cart._id)
-            console.log('carttt:', userCart.products);
-            res.render('cart', {user, admin, userCart ,activeSession}) 
+            const cart = await CartService.getById(cid)
+            res.render('cart', {user, admin, cart ,activeSession}) 
       
           }
      } catch (error) {

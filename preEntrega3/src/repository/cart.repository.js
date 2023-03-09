@@ -13,7 +13,7 @@ export default class CartRespository {
     create = async(data) => {
         const dataToInsert = new CartDTO(data)
         const result = await this.dao.create(dataToInsert)
-        return result
+        return true
     }
 
     getById = async(id) => {
@@ -52,6 +52,10 @@ export default class CartRespository {
         }
     }
 
+    getLastCart = async() => {
+        const cart = await this.dao.getLastCart()
+        return cart
+    }
     
         
 }

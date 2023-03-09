@@ -29,10 +29,6 @@ export default class UsersRepository {
         return await this.dao.getByEmail(email)
     }
 
-    assignCart = async() => {
-        const cart = await this.dao.assignCart()
-        return cart
-    }
 
     getUserByCartId = async(cid) => {
         return await this.dao.getUserByCartId(cid)

@@ -50,7 +50,6 @@ export default class Product {
         const stock = await this.getStock(pid)
         await productModel.updateOne({_id:pid}, {$set:{'stock':(stock-quantity)}})
        
-
     }
 
 

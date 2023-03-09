@@ -7,7 +7,7 @@ import dotenv from 'dotenv'
 import {createHash, isValidPassword} from "../utils/utils.js"
 import { generateToken } from "../utils/utils.js";
 import { extractCookie } from "../utils/utils.js";
-import { UserService } from "../repository/index.js";
+import { CartService, UserService } from "../repository/index.js";
 
 dotenv.config()
 
@@ -74,13 +74,17 @@ const initializePassport = () => {
                     let result = await UserService.create(newUser)
                     return done(null, result)
                 }
-                const cart = await UserService.assignCart()
+                const newCart = {
+                    products: []
+                }
+                await CartService.create(newCart)
+                const cart = await CartService.getLastCart()
                 const newUser = {
                     first_name,
                     last_name,
                     email,
                     age,
-                    cart: 'cart',
+                    cart: cart._id,
                     password:createHash(password) 
                 }
                 let result = await UserService.create(newUser)
@@ -93,8 +97,8 @@ const initializePassport = () => {
     passport.use('login', new LocalStrategy({
         usernameField: 'email'
     }, async(username, password, done) =>{
-        const user = await UserService.getByEmail(username)
-            try {
+        try {
+                const user = await UserService.getByEmail(username)
                 if(!user) {
                     console.log('User does not exist');
                     return done(null, false)
@@ -117,8 +121,8 @@ const initializePassport = () => {
     passport.serializeUser((user, done)=>{
             done(null, user)
         })
-    passport.deserializeUser(async (id, done)=>{
-            let user = await UserService.getById(id)
+    passport.deserializeUser(async (user, done)=>{
+            //const user = await UserService.getById(id)
             done(null, user)
         }) 
 

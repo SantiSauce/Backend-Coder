@@ -14,18 +14,16 @@
       console.log(error);
     }
   };*/
-  
-  const cid = document.getElementById("purchase__btn").value;
-  
   /*deleteBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       const pid = btn.value;
-  
+      
       deleteProduct(cid, pid);
       location.reload();
     });
   });*/
   
+  const cid = document.getElementById("purchase__btn").value;
   const purchaseBtn = document.getElementById("purchase__btn");
   
   purchaseBtn.addEventListener("click", () => {
@@ -54,10 +52,7 @@
   };
 
 
-
-
-
-  let products = document.getElementsByClassName("product");
+ /* let products = document.getElementsByClassName("product");
 
   function sum() {
   let sum = document.getElementById("tot");
@@ -100,3 +95,4 @@
     }
   });
 }
+*/

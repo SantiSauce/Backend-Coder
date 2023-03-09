@@ -66,7 +66,6 @@ export default class MyRouter {
         
         const user = (req.session.user)
 
-        console.log('quiero saber', (user.rol).toUpperCase());
         if(policies.includes((user.rol).toUpperCase())){
             return next()
         }else{

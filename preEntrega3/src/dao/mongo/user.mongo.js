@@ -19,7 +19,7 @@ export default class User {
             email: user.email,
             rol: user.rol
         }
-        return safeData
+        return {safeData}
         }
 
     create = async(data) => {
@@ -35,16 +35,13 @@ export default class User {
         return await usersModel.findOne({email: email})
     }
 
-    /*assignCart = async() => {
-        const cart = {
-            products: []
-        }
-        await cartModel.create(cart)
-        const newCart = (await cartModel.find()).pop()
-        return newCart._id
-    }*/
 
-    /*getUserByCartId = async(cid) => {
+    
+
+    getUserByCartId = async(cid) => {
         return await usersModel.findOne({cart:cid})        
-    }*/
+    }
+
+
 }
+

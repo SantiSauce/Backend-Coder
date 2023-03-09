@@ -36,12 +36,12 @@ export const getCartById = async (req, res) => {
 
 }
 
-export const addProductToCart = async (req, res) => {
+export const addProductToCart = async (req, res) => { 
 
     try {
         const result = await CartService.addProduct(req.params.cid, req.params.pid)
-        //res.json({status:'success', result:result}).redirect('/home')
-        res.redirect('/cart/:cid')        
+        const cid = req.params.cid
+        res.redirect(`/cart/${cid}`)        
     } catch (error) {
         console.log(error)        
     }
@@ -91,12 +91,11 @@ export const generatePurchase = async(req, res) => {
     try {
         //const user = req.body
         const cid = req.params.cid
-        const cart = await CartService.getById(cid)
+        const cart = await CartService.getById(req.params.cid)
         const user = await UserService.getUserByCartId(cid)
         const rejectedProducts = []
         const purchasedProducts = []
 
-        console.log(user);
         let total = 0        
 
 
@@ -118,7 +117,7 @@ export const generatePurchase = async(req, res) => {
             purchaser: user.email
         }
         console.log(newTicket);
-        return
+        
     
         const ticketCreated = await TicketService.create(newTicket)
         

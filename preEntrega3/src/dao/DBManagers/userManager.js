@@ -1,4 +1,4 @@
-import usersModel from "../mongo/models/users.model.js"
+/*import usersModel from "../mongo/models/users.model.js"
 import cartModel from "../mongo/models/carts.model.js"
 import { cartMongoManager } from "./index.js"
 export class userManagerDB {
@@ -6,7 +6,7 @@ export class userManagerDB {
     getAllUsers = async () => {
 
         try {
-            const users = await usersModel.find().lean()
+            const users = await usersModel.find().lean().exec()
             if(!users){
                 console.error('Users not found')
             }
@@ -29,7 +29,7 @@ export class userManagerDB {
 
     getUserById = async (id) => {
         try {
-            const user = await usersModel.findById(id)
+            const user = await usersModel.findOne({_id:id})
             return user
         } catch (error) {
             console.log(error);            
@@ -52,3 +52,4 @@ export class userManagerDB {
 
 
 }
+*/

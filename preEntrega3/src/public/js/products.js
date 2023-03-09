@@ -1,4 +1,4 @@
-$(".hover").mouseleave(
+/*$(".hover").mouseleave(
     function () {
       $(this).removeClass("hover");
     }
@@ -35,3 +35,4 @@ const addToCart = async (cid, pid) => {
 addToCartBtn.addEventListener("click", () => {
   addToCart(cid, pid);
 });
+*/

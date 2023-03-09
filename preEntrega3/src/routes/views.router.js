@@ -17,11 +17,11 @@ export default class ViewsRouter extends MyRouter{
         this.get('/home', ['USER', 'ADMIN'], showHomeView)
         this.get('/allProducts', ['USER', 'ADMIN'],showAllProducts)
         this.get('/insertProduct', ['ADMIN'], getInsertProductView)
-        this.get('/products/:id', ['USER'],showOneProduct) 
         this.get('/register', ['PUBLIC'], getRegister)
         this.get('/login', ['PUBLIC'],getLogIn)
         this.get('/admin', ['ADMIN'],showAdminView)
-        this.get('/cart/:id', ['USER'],getCartView)
+        this.get('/cart/:cid', ['USER'],getCartView)
+        this.get('/products/:pid', ['USER'],showOneProduct) 
     }
 }
 

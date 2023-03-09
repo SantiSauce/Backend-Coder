@@ -6,13 +6,13 @@ export const getUsers = async() =>{
      await UserService.get()
 }
 
-export const getUserByEmail = async () => {
+/*export const getUserByEmail = async () => {
     await UserService.getByEmail(email)
-}
+}*/
 
-export const getUserById = async () => {
+/*export const getUserById = async () => {
     await UserService.getById(id)
-}
+}*/
 
 export const logOutUser = async(req, res) => {
     req.session.destroy((err) => {
@@ -24,7 +24,7 @@ export const logOutUser = async(req, res) => {
 
 export const getCurrentUser = async(req, res) => {
     try {
-        const user = req.session.user
+        const user = req.user
         const userDataEdit = await UserService.getSafeInfo(user._id)
         res.send(userDataEdit)
     } catch (error) {

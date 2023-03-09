@@ -2,7 +2,6 @@ export let verificarAdmin = (req) => {
     let activeSession;
     let admin;
     const user = req.session?.user
-    console.log(user);
     if (req.session?.user) {
       activeSession = true;
     } else { 

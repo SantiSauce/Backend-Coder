@@ -11,9 +11,9 @@ import {
 export default class ProductsRouter extends MyRouter{
     init(){
         this.get('/', getProducts)
-        this.get('/:id', getProductById)
         this.post('/', ['ADMIN'],createProduct)
         this.put('/:id', ['ADMIN'],updateProduct)
         this.delete('/:id', ['ADMIN'],deleteProduct)
+        this.get('/:id', getProductById)
     }
 }

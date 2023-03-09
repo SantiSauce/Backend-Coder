@@ -4,7 +4,7 @@ import productModel from "./models/product.model.js"
 export default class Cart {
     constructor(){}
 
-    get = async() => {
+    get = async() => { 
         return await cartModel.find()
     }
 
@@ -14,7 +14,7 @@ export default class Cart {
     }
 
     getById = async(id) => {
-        return await cartModel.findOne({_id: id}).lean()
+        return await cartModel.findOne({_id: id}).lean().exec()
     }
 
     delete = async(id) => {
@@ -78,6 +78,12 @@ export default class Cart {
 
     updateQuantity = async(cid, pid, obj) => {
         await cartModel.updateOne({_id: cid, 'products.product': pid},{$set:{'products.$.quantity':obj.quantity}})
+    }
+
+    getLastCart = async() => {
+        const cartsList = await cartModel.find()
+        const cart = cartsList.pop()
+        return cart
     }
 
 
