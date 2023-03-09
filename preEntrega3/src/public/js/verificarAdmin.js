@@ -1,12 +1,16 @@
 export let verificarAdmin = (req) => {
     let activeSession;
     let admin;
+    const user = req.session?.user
+    console.log(user);
     if (req.session?.user) {
       activeSession = true;
-    } else {
+    } else { 
       activeSession = false;
+      admin = null
+      return{activeSession, admin}
     }
-    if (req.session?.user.rol == "admin") {
+    if (req.session.user.rol == "admin") {
       admin = true;
     } else {
       admin = false;

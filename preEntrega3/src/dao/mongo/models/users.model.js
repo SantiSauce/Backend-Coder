@@ -23,7 +23,7 @@ const userSchema = new Schema({
 
 userSchema.pre('findOne', function() {
     this.populate('cart')
-})
+}) 
 userSchema.pre('find', function()  {
     this.populate('cart')
 })

@@ -1,52 +1,132 @@
-import { CartService } from "../services/carts.services.js";
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
+import { CartService } from "../repository/index.js";
+import { UserService } from "../repository/index.js";
+import { TicketService } from "../repository/index.js";
+import { ProductService } from "../repository/index.js";
+import { generateRandomString } from "../public/js/generateRandomString.js";
 
 export const createCart = async (req, res) => {
-    await CartServices.addCart()
+
+    try {
+        const cart = await CartService.create()
+        res.json({status:'success', cart: cart._id})        
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const getCarts = async (req, res) => {
-    await CartServices.getCarts()
+    try {
+        const carts = await CartService.get()
+        res.json({status: 'success', carts: carts})
+        
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const getCartById = async (req, res) => {
-    await CartServices.getCartById(req.params.id)
+
+    try {
+        const cart = await CartService.getById(req.params,id)
+        res.json({status:'success', cart: cart})
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
 export const addProductToCart = async (req, res) => {
-    await CartServices.addProductToCart(req.params.cid, req.params.pid)
+
+    try {
+        const result = await CartService.addProduct(req.params.cid, req.params.pid)
+        //res.json({status:'success', result:result}).redirect('/home')
+        res.redirect('/cart/:cid')        
+    } catch (error) {
+        console.log(error)        
+    }
 }
 
 export const deleteProductFromCart = async (req, res) => {
-    await CartServices.deleteProductFromCart(req.params.cid, req.params.pid)
+
+    try {
+        const result = await CartService.deleteProduct(req.params.cid, req.params.pid)
+        res.json({status:'success', result: result})        
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const deleteAllProductsFromCart = async (req, res) => {
-    await CartServices.deleteAllProductsFromCart(req.params.cid)
+
+    try {
+        const result = await CartService.deleteAllProducts(req.params.cid)
+        res.json({status:'success', result:result})
+        
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const updateProductsFromCart = async (req, res) => {
-    await CartServices.updateCart(req.params.cid, req.body)
-}
-
-export const updateStock = async (req, res) => {
-    await CartServices.updateQuantity(req.params.cid, req.params.pid, req.body)
-}
-
-export const getCartView = async(req, res) => {
-    let adminSession = verificarAdmin(req)
-    let { activeSession, admin } = adminSession;
-
-    const product = req.body
-    console.log(`product ${product}`);
-
     try {
-        if(activeSession){
-            const user = req.session?.user
-            res.render('cart', {user, admin, activeSession}) 
-            console.log(user);   
-          }
-     } catch (error) {
-          console.log(error);
-     }
+        const result = await CartService.update(req.params.cid, req.body)
+         return res.json({status:'success', result: result}) 
+    } catch (error) {
+        console.log(error);        
+    }
 }
+
+export const updateQuantity = async (req, res) => {
+    try {
+        const result = await CartService.updateQuantity(req.params.cid, req.params.pid, req.body)
+        res.json({status:'success', result: result})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const generatePurchase = async(req, res) => {
+//2142 ema
+    try {
+        //const user = req.body
+        const cid = req.params.cid
+        const cart = await CartService.getById(cid)
+        const user = await UserService.getUserByCartId(cid)
+        const rejectedProducts = []
+        const purchasedProducts = []
+
+        console.log(user);
+        let total = 0        
+
+
+        for (let i = 0; i < cart.products.length; i++) {
+            const inStock = ((await ProductService.getStock(cart.products[i].product)) >= cart.products[i].quantity) ? true : false
+            if(inStock){
+                purchasedProducts.push(cart.products[i])
+                total += ((await ProductService.getPrice(cart.products[i].product))*(cart.products[i].quantity))
+                await CartService.deleteProduct(cid, cart.products[i].product)
+                await ProductService.decreaseStock(cart.products[i].product, cart.products[i].quantity)
+            }else{
+                rejectedProducts.push(cart.products[i])
+            }
+        }
+        const newTicket = {
+            code: generateRandomString(),
+            purchase_datetime: new Date(),
+            amount: total,
+            purchaser: user.email
+        }
+        console.log(newTicket);
+        return
+    
+        const ticketCreated = await TicketService.create(newTicket)
+        
+        res.json({status:'Purchase successfully completed', ticket: ticketCreated, productsPurchased: purchasedProducts, productsRejected: rejectedProducts})
+    } catch (error) {
+        console.log(error)        
+    }
+    
+
+}
+

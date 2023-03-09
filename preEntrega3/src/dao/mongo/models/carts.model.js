@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const cartCollection = 'carts'
-
+ 
 const Schema = mongoose.Schema
 
 const cartSchema = new Schema({

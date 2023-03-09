@@ -1,5 +1,5 @@
-import cartModel from '../dao/models/carts.model.js'
-import productModel from '../dao/models/users.model.js'
+import cartModel from '../dao/mongo/models/carts.model.js'
+import productModel from '../dao/mongo/models/users.model.js'
 
 class CartsServices { 
 
@@ -78,13 +78,8 @@ class CartsServices {
 
         
         const cart = await cartModel.findOne({_id: cid}).lean().exec()
-        //Array.from(products)
-        //const result = Array.isArray(products)
-
-        //const productIdArray = products.map(e => e._id)
-        console.log(products);
-
-        if(cart){
+       
+        if(cart){ 
              products.forEach( async(element) => {
                 const valideProduct = await productModel.findOne({_id:element}).lean().exec()
                 if(valideProduct){//si existe producto 
@@ -94,8 +89,7 @@ class CartsServices {
                         await cartModel.updateOne({_id: cid},{products:newProduct})             
                     }
                     if(productoABuscarEnCarrito){//si producto fue ingresado entonces sumo 1 a quantity
-                        //const index = cart.products.map(e => e.product).indexOf(productId)
-                        //const quantity = cart.products[index].quantity
+               
                         await cartModel.updateOne({_id: cid, 'products.product': element},{$inc:{'products.$.quantity':+1}})             
     
                     }

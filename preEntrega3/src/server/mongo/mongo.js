@@ -1,4 +1,4 @@
-import { connect, set } from "mongoose";
+/*import { connect, set } from "mongoose";
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -11,4 +11,4 @@ export const connectDB = async () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  };*/

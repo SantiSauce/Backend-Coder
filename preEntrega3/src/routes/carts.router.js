@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import MyRouter from './router.js'
 import {
     getCarts,
     getCartById,
@@ -7,26 +7,22 @@ import {
     deleteProductFromCart,
     deleteAllProductsFromCart,
     updateProductsFromCart,
-    updateStock,
+    updateQuantity,
+    generatePurchase
 } from '../controllers/carts.controller.js'
 
-const router = Router()
 
-//api routes
-router.post('/', createCart)
-
-router.get('/', getCarts)
-
-router.get('/:cid', getCartById)
-
-router.get('/:cid/product/:pid', addProductToCart)
-
-router.get('/:cid/product/:pid', deleteProductFromCart)
-
-router.get('/:cid', deleteAllProductsFromCart)
-
-router.get('/:cid', updateProductsFromCart)
-
-router.get('/:cid/product/:pid', updateStock)
-
-export {router as cartsRouter}
+export default class CartsRouter extends MyRouter{
+    init(){
+        this.post('/',createCart)
+        this.get('/', getCarts)
+        this.get('/:cid', getCartById)
+        this.get('/:cid/product/:pid', ['USER'],addProductToCart)
+        this.get('/:cid/product/:pid/delete', deleteProductFromCart) 
+        this.get('/:cid', deleteAllProductsFromCart)
+        this.get('/:cid', updateProductsFromCart)
+        this.get('/:cid/product/:pid/update', ['USER'],updateQuantity)
+        this.post('/:cid/purchase', ['USER'],generatePurchase)
+        
+    }
+}

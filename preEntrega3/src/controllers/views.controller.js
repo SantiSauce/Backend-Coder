@@ -1,17 +1,17 @@
-import { ProductsService } from "../services/products.services.js";
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
+import { CartService, ProductService } from "../repository/index.js";
+import { UserService } from "../repository/index.js";
 
 export const showOneProduct = async (req, res) => {
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;
-    const product = await ProductsService.getProductById(req.params.id) 
+    const product = await ProductService.getById(req.params.id) 
     res.render('oneProduct', {product, activeSession, admin})
 }
 
 export const getInsertProductView = async (req, res) => {
-    let adminSession = verificarAdmin(req)
-    let { activeSession, admin } = adminSession;
-    res.render('insertProduct', {activeSession, admin})
+
+    res.render('insertProduct')
 }
 
 export const showAllProducts = async (req, res) => {
@@ -25,16 +25,29 @@ export const showAllProducts = async (req, res) => {
 
     const options = {page, limit, lean:true}
 
-    const products = await ProductsService.getProducts(filter, search, options)
+    let products = []
+
+    if(filter == 'stock'){
+        products = await ProductService.getPaginate({stock:0}, options)
+        if(!products){
+            throw new Error("THE DB IS EMPTY");
+        }
+    }
+    if(filter !== 'stock'){
+        products = await ProductService.getPaginate(search, options)
+        if(!products) {
+            throw new Error("THE DB IS EMPTY")
+        }
+    } 
 
     products.prevLink = (products.hasPrevPage) ? `/allProducts?page=${products.prevPage}` : '' 
     products.nextLink = (products.hasNextPage) ? `/allProducts?page=${products.nextPage}` : '' 
 
     
-    const user = req.session?.user
+    /*const user = req.session?.user
     if(user.email === 'adminCoder@coder.com'){
         req.session.user.rol = 'admin'
-    }
+    }*/
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;
     console.log(activeSession);
@@ -43,12 +56,12 @@ export const showAllProducts = async (req, res) => {
     //esto es para el alert cuando recien entras 
     req.session.count = req.session.count ? req.session.count + 1 : 1
     const cuenta = req.session.count 
-
+    const user = req.session?.user
     const response = {
         status: 'success', 
         payload: products.docs,
-        user,
         cuenta,
+        user,
         totalPages: products.totalPages,
         prevPage: products.prevPage,
         nextPage: products.nextPage,
@@ -57,7 +70,7 @@ export const showAllProducts = async (req, res) => {
         prevLink: products.prevLink,
         nextLink: products.nextLink
     }
-    res.render('allProducts', {response, user, admin, activeSession})
+    res.render('allProducts', {response, admin, activeSession, user})
 }
 
 export const showHomeView = async(req, res) => {
@@ -93,22 +106,24 @@ export const getLogIn = async(req, res) => {
 export const showAdminView = async (req, res) => {
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;
-    const users =  UsersService.getAllUsers()
+    const users =  await UserService.get()
     res.render('admin', {users, activeSession, admin})
-}
+} 
 
 export const getCartView = async(req, res) => {
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;
 
-    const product = req.body
-    console.log(`product ${product}`);
+    
 
     try {
         if(activeSession){
             const user = req.session?.user
-            res.render('cart', {user, admin, activeSession}) 
-            console.log(user);   
+            const cart = user.cart
+            const userCart = await CartService.getById(cart._id)
+            console.log('carttt:', userCart.products);
+            res.render('cart', {user, admin, userCart ,activeSession}) 
+      
           }
      } catch (error) {
           console.log(error);

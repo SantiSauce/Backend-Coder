@@ -1,11 +1,21 @@
-import { ProductsService } from "../services/products.services.js";
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
+import { ProductService } from "../repository/index.js";
 
-export const createProducts = async (req, res) => {
-    await ProductService.addProduct(req.body)
+export const createProduct = async (req, res) => {
+    const product = req.body
+    if((!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock || !product.category)){
+        console.error("Complete todos los campos")
+    }
+    if((await ProductService.verifyCode(product.code)) == false){
+        await ProductService.create(product)
+        res.json(`Product ${product.title} successfully created`)
+    } else{
+        console.log('Product already exists');
+    }    
 }
 
 export const getProducts = async (req, res) => {
+    
     const limit = req.query?.limit || 10
     const page = req.query?.page || 1
     const filter = req.query?.query || ''
@@ -16,7 +26,20 @@ export const getProducts = async (req, res) => {
 
     const options = {page, limit, lean:true}
 
-    const products = await ProductService.getProducts(filter, search, options)
+    const products = []
+
+    if(filter == 'stock'){
+        products = await ProductService.getPaginate({stock:0}, options)
+        if(!products){
+            throw new Error("THE DB IS EMPTY");
+        }
+    }
+    if(filter !== 'stock'){
+        products = await ProductService.getPaginate(search, options)
+        if(!products) {
+            throw new Error("THE DB IS EMPTY")
+        }
+    } 
 
     products.prevLink = (products.hasPrevPage) ? `/?page=${products.prevPage}` : '' 
     products.nextLink = (products.hasNextPage) ? `/?page=${products.nextPage}` : '' 
@@ -32,19 +55,22 @@ export const getProducts = async (req, res) => {
         prevLink: products.prevLink,
         nextLink: products.nextLink
     }
-    res.json(result)   
+    res.json(result) 
+
 }
 
 export const getProductById = async (req, res) => {
-    const products = await ProductService.getProductById(req.params.id)
-    res.json(products)
+    const product = await ProductService.getOne(req.params.id)
+    res.json(product)
 }
 
 export const deleteProduct = async (req, res) => {
-    await ProductsService.deleteProduct(req.params.id)
+    await ProductService.delete(req.params.id)
+    res.json(await ProductService.get())
 }
 
 export const updateProduct = async (req, res) => {
-    await ProductsService.updateProduct(req.params.id, req.body)
+    const productUpdated = await ProductService.update(req.params.id, req.body)
+    res.json(productUpdated)
 }
 

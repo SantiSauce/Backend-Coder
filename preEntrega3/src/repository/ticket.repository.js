@@ -1,0 +1,31 @@
+import TicketDTO from '../dao/DTO/ticket.dto.js'
+
+export default class TicketRepository {
+
+    constructor(dao){
+        this.dao = dao
+    }
+    
+    get = async() => {
+        return this.dao.get()
+    }
+
+    getByCode = async(code) => {
+        return await this.dao.getByCode(code)
+    }
+
+    getById = async(tid) => {
+        return await this.dao.getById(tid)
+    }
+
+    create = async(data) => {
+        const ticket = new TicketDTO(data)
+        return await this.dao.create(ticket)
+    }
+
+    delete = async(tid) => {
+        return await this.dao.delete(tid)
+    }
+
+
+}

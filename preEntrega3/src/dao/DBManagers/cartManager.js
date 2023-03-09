@@ -1,5 +1,5 @@
-import cartModel from "../models/carts.model.js"
-import productModel from "../models/product.model.js"
+import cartModel from "../mongo/models/carts.model.js"
+import productModel from "../mongo/models/product.model.js"
 import mongoose from "mongoose"
 import express from 'express'
 

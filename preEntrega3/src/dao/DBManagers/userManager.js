@@ -1,5 +1,5 @@
-import usersModel from "../models/users.model.js"
-import cartModel from "../models/carts.model.js"
+import usersModel from "../mongo/models/users.model.js"
+import cartModel from "../mongo/models/carts.model.js"
 import { cartMongoManager } from "./index.js"
 export class userManagerDB {
 

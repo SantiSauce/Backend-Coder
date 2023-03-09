@@ -1,9 +1,9 @@
-import { Router } from "express";
+import MyRouter from "./router.js";
 import { getCurrentUser } from '../controllers/users.controller.js'
 import { authToken } from "../utils/utils.js";
 
-const router = Router()
-
-router.get('/current', authToken, getCurrentUser)
-
-export {router as sessionRouter}
+export default class SessionsRouter extends MyRouter {
+    init() {
+        this.get('/current', ['ADMIN'], authToken, getCurrentUser)
+    }
+}

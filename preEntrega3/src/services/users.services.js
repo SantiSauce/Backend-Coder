@@ -1,4 +1,4 @@
-import usersModel from '../dao/models/users.model.js'
+import usersModel from '../dao/mongo/models/users.model.js'
 import { CartService } from "./carts.services.js"
 
  class UsersServices {
@@ -41,7 +41,7 @@ import { CartService } from "./carts.services.js"
         const carts = await CartServices.getCarts()
         const lastCart = carts.pop()
         return lastCart._id
-    }
+    } 
 
 
 }

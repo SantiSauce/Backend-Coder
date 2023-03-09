@@ -1,7 +1,8 @@
-import { Router } from "express"
+import MyRouter from "./router.js"
+import { passportCall } from "../utils/utils.js" 
 import {
     showAllProducts,
-    showOneProduct,
+    showOneProduct, 
     getInsertProductView,
     showHomeView,
     getRegister,
@@ -10,25 +11,24 @@ import {
     getCartView
 
 } from '../controllers/views.controller.js'
-import { passportCall } from "../utils/utils.js"
+
+export default class ViewsRouter extends MyRouter{
+    init() {
+        this.get('/home', ['USER', 'ADMIN'], showHomeView)
+        this.get('/allProducts', ['USER', 'ADMIN'],showAllProducts)
+        this.get('/insertProduct', ['ADMIN'], getInsertProductView)
+        this.get('/products/:id', ['USER'],showOneProduct) 
+        this.get('/register', ['PUBLIC'], getRegister)
+        this.get('/login', ['PUBLIC'],getLogIn)
+        this.get('/admin', ['ADMIN'],showAdminView)
+        this.get('/cart/:id', ['USER'],getCartView)
+    }
+}
 
 
-const router = Router()
 
-router.get('/home', passportCall('jwt'), showHomeView)
 
-router.get('/allProducts', passportCall('jwt'),showAllProducts)
 
-router.get('/insertProduct', passportCall('jwt'), getInsertProductView)
 
-router.get('/products/:id', passportCall('jwt'),showOneProduct) 
 
-router.get('/register', getRegister)
 
-router.get('/login', getLogIn)
-
-router.get('/admin', passportCall('jwt'),showAdminView)
-
-router.get('/cart/:id', passportCall('jwt'),getCartView)
-
-export { router as viewsRouter }

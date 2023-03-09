@@ -1,4 +1,4 @@
-import productModel from "../dao/models/product.model.js"
+import productModel from "../dao/mongo/models/product.model.js"
 
 class ProductsServices { 
 
@@ -13,10 +13,10 @@ addProduct = async(product) =>
     if(!valide){
         const newProduct = {title: product.title, description: product.description, code: product.code, price: product.price, status: true, stock: product.stock, category: product.category, thumbnail: product.thumbnail}
         const createdProduct = new productModel(newProduct)
-        await createdProduct.save()
+        await createdProduct.save() 
         return createdProduct.title
     }console.log('El producto ya fue ingresado');
-}
+}//hecho en repo
 getProducts = async (filter, search, options) => {
         try {
           if (filter === "stock") {

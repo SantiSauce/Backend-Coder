@@ -7,10 +7,7 @@ import dotenv from 'dotenv'
 import {createHash, isValidPassword} from "../utils/utils.js"
 import { generateToken } from "../utils/utils.js";
 import { extractCookie } from "../utils/utils.js";
-import { userMongoManager } from "../dao/DBManagers/index.js";
-
-import usersModel from "../dao/models/users.model.js";
-
+import { UserService } from "../repository/index.js";
 
 dotenv.config()
 
@@ -32,7 +29,7 @@ const initializePassport = () => {
             //console.log(profile);
 
             try {
-                const user = await usersModel.findOne({email: profile._json.email})
+                const user = await UserService.getByEmail(profile._json.email)
                 if(user) {
                     console.log('User already exists');
                     user.token = generateToken(user)
@@ -45,7 +42,7 @@ const initializePassport = () => {
                     password: '',
                     rol: 'admin'
                 }
-                const result = await usersModel.create(newUser)
+                const result = await UserService.create(newUser)
                 result.token = generateToken(result)
                 return done(null, result)
             } catch (error) {
@@ -60,7 +57,7 @@ const initializePassport = () => {
     }, async (req, username, password, done) => {
             const {first_name, last_name, age, email} = req.body
             try {
-                let user = await usersModel.findOne({email:username})
+                let user = await UserService.getByEmail(username)
                 if(user) {
                     console.log('User already exists');
                     return done(null, false)
@@ -74,19 +71,19 @@ const initializePassport = () => {
                         password:createHash(password),
                         rol: 'admin'
                     }
-                    let result = await usersModel.create(newUser)
+                    let result = await UserService.create(newUser)
                     return done(null, result)
                 }
-                const cart = await userMongoManager.createUserCart()
+                const cart = await UserService.assignCart()
                 const newUser = {
                     first_name,
                     last_name,
                     email,
                     age,
-                    cart: cart,
+                    cart: 'cart',
                     password:createHash(password) 
                 }
-                let result = await usersModel.create(newUser)
+                let result = await UserService.create(newUser)
                 return done(null, result)
 
             } catch (error) {
@@ -96,8 +93,8 @@ const initializePassport = () => {
     passport.use('login', new LocalStrategy({
         usernameField: 'email'
     }, async(username, password, done) =>{
+        const user = await UserService.getByEmail(username)
             try {
-                const user = await usersModel.findOne({email:username}).lean().exec()
                 if(!user) {
                     console.log('User does not exist');
                     return done(null, false)
@@ -118,12 +115,12 @@ const initializePassport = () => {
             done(null, jwt_payload)
         }))
     passport.serializeUser((user, done)=>{
-            done(null, user._id)
-        })
-    passport.deserializeUser(async (id, done)=>{
-            let user = await usersModel.findById(id)
             done(null, user)
         })
+    passport.deserializeUser(async (id, done)=>{
+            let user = await UserService.getById(id)
+            done(null, user)
+        }) 
 
 }
 export default initializePassport

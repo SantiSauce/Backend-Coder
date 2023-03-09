@@ -14,7 +14,7 @@
       <a href="#"> <i class="ion-share"></i></a>
       <a href="#"> <i class="ion-search"></i></a> 
     </div>
-    <input type="button" class="add-to-cart" onclick="something()" value="Add product to cart">
+    <a href="/api/carts/63fcc33462d77cae8b13a1b8/product/{{this._id}}" class="add-to-cart">Add to Cart</a>
 
     <!-- <a href="/carts/{{response.user.cart._id}}" class="add-to-cart">Add to Cart</a> -->
   </div>
@@ -309,13 +309,5 @@ p, li, a{
 
 </style>
 
-<script>
-    /* Demo purposes only */
-  $(".hover").mouseleave(
-    function () {
-      $(this).removeClass("hover");
-    }
-  );
-  window.onload = function() {
-  document.body.className += ' loaded'};
-</script>
+
+<script src="/js/products.js"></script>

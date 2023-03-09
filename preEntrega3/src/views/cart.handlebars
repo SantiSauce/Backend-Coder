@@ -12,16 +12,14 @@
        0
        </span>$</h4>
     </div>
-    {{#each user.cart.products}}
+    {{#each userCart.products}}
     <div class="product">
       <div>
       </div>
-      <div>        
-        <img width="120"height="100" class="img" src="{{this.thumbnail}}" alt="">
-      </div>
+      
       <div class="disc">
-        <div class="name">{{this.title}}</div>
-        <div class="color">{{this.category}}</div>
+        <div class="name">{{this.product.title}}</div>
+        <div class="color">{{this.product.category}}</div>
         
       </div>
       <div class="quant">
@@ -31,9 +29,9 @@
       </div>
       <div>
         <h4 class="price">
-          {{this.price}}$
+          {{this.product.price}}$
         </h4>
-        <h4 class="pu" >{{this.price}}</h4>
+        <h4 class="pu" >{{this.product.price}}</h4>
         
       </div>
         <div class="op">
@@ -42,6 +40,9 @@
       
     </div>
     {{/each}}
+    <div>
+      <button id="purchase__btn" value="{{userCart._id}}">PURCHASE</button>
+    </div>
   </div>
 </div>
 
@@ -157,50 +158,8 @@
 }
 </style>
 
-<script>
+<script src="/js/cart.js"></script>
 
-  let products = document.getElementsByClassName("product");
+  
 
-  function sum() {
-  let sum = document.getElementById("tot");
-  let arr = document.getElementsByClassName("price");
-  sum.innerText = 0;
-  for (x of arr) {
-    let txt = x.innerText;
-    sum.innerText =
-      Number(sum.innerText) + Number(txt.substring(0, txt.length - 1));
-  }
-}
-  sum();
 
-  for (let i = 0; i < products.length; i++) {
-    let elem = products[i];
-    let pu = elem.querySelector(".pu").innerText;
-    elem.addEventListener("click", e => {
-      switch (e.target.className) {
-        case "fas fa-heart":
-        case "fas fa-heart red":
-          e.target.classList.toggle("red");
-        break;
-        case "remove":
-          elem.remove();
-        break;
-        case "plus":
-          elem.querySelector(".qt").innerText++;
-          elem.querySelector(".price").innerText =
-          pu * elem.querySelector(".qt").innerText + "$";
-          sum();
-        break;
-        case "minus":
-          if (elem.querySelector(".qt").innerText > 0) {
-            elem.querySelector(".qt").innerText--;
-            elem.querySelector(".price").innerText =
-            pu * elem.querySelector(".qt").innerText + "$";
-          sum();
-        }
-        break;
-    }
-  });
-}
-
-</script>

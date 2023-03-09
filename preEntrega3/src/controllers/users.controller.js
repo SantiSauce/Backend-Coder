@@ -1,24 +1,18 @@
-import { UsersService } from "../services/users.services.js";
 import dotenv from 'dotenv'
-
+import { UserService } from "../repository/index.js";
 dotenv.config()
 
 export const getUsers = async() =>{
-     await UsersService.getAllUsers()
+     await UserService.get()
 }
 
 export const getUserByEmail = async () => {
-    await UsersService.getUserByEmail(email)
+    await UserService.getByEmail(email)
 }
 
 export const getUserById = async () => {
-    await UsersService.getUserById(id)
+    await UserService.getById(id)
 }
-
-export const createUserCart = async () => {
-    await UsersService.createUserCart()
-}
-
 
 export const logOutUser = async(req, res) => {
     req.session.destroy((err) => {
@@ -31,7 +25,8 @@ export const logOutUser = async(req, res) => {
 export const getCurrentUser = async(req, res) => {
     try {
         const user = req.session.user
-        res.send(user)
+        const userDataEdit = await UserService.getSafeInfo(user._id)
+        res.send(userDataEdit)
     } catch (error) {
         console.log(error);
     }

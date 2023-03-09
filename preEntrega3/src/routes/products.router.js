@@ -1,25 +1,19 @@
-import { Router } from "express";
+import MyRouter from "./router.js";
 import {
-    createProducts,
+    createProduct,
     getProducts,
     getProductById,
     deleteProduct,
     updateProduct
 } from '../controllers/products.controller.js'
 
-const router = Router()
 
-router.post('/', createProducts)
-
-router.get('/', getProducts)
-
-router.get('/:id', getProductById)
-
-router.delete('/:id', deleteProduct)
-
-router.put('/:id', updateProduct)
-
-
-
-
-export {router as productsRouter}
+export default class ProductsRouter extends MyRouter{
+    init(){
+        this.get('/', getProducts)
+        this.get('/:id', getProductById)
+        this.post('/', ['ADMIN'],createProduct)
+        this.put('/:id', ['ADMIN'],updateProduct)
+        this.delete('/:id', ['ADMIN'],deleteProduct)
+    }
+}
