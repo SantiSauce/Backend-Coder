@@ -20,7 +20,7 @@ export default class CartsRouter extends MyRouter{
         this.get('/string/:cid/product/:pid/delete', ['USER'], deleteProductFromCart) 
         this.get('/string/:cid', ['USER'],deleteAllProductsFromCart)
         this.get('/string/:cid', ['USER'],updateProductsFromCart)
-        this.get('/string/:cid/product/:pid/update', ['USER'],updateQuantity)
+        this.get('/:cid/product/:pid/updateQuantity', ['USER'],updateQuantity)
         this.post('/:cid/purchase', ['USER'],generatePurchase)
     //this.get('/string/:cid', getCartById)
         

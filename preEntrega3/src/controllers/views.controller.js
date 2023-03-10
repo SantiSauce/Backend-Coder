@@ -117,7 +117,7 @@ export const getCartView = async(req, res) => {
             const cid = req.params.cid
             const user = req.session?.user
             const cart = await CartService.getById(cid)
-            res.render('cart', {user, admin, cart ,activeSession}) 
+            res.render('cart', {user, cart,}) 
       
           }
      } catch (error) {

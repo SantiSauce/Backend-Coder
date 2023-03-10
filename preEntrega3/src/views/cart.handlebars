@@ -13,7 +13,7 @@
        </span>$</h4>
     </div>
     {{#each cart.products}}
-    <div class="product">
+    <div class="product" id="product"> 
       <div>
       </div>
       
@@ -25,7 +25,7 @@
       <div class="quant">
         <span class="minus">-</span>
         <span class="qt">{{this.quantity}}</span>
-        <span class="plus">+</span>
+        <div><button id="plus"  value="{{this.product._id}}">+</button></div>
       </div>
       <div>
         <h4 class="price">

@@ -121,7 +121,7 @@ export const generatePurchase = async(req, res) => {
     
         const ticketCreated = await TicketService.create(newTicket)
         
-        res.json({status:'Purchase successfully completed', ticket: ticketCreated, productsPurchased: purchasedProducts, productsRejected: rejectedProducts})
+        res.status(200).json({status:'Purchase successfully completed', ticket: ticketCreated, productsPurchased: purchasedProducts, productsRejected: rejectedProducts})
     } catch (error) {
         console.log(error)        
     }
