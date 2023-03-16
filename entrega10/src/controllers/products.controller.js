@@ -1,17 +1,30 @@
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
 import { ProductService } from "../repository/index.js";
 
+import CustomError from "../services/errors/CustomError.js";
+import Errors from "../services/errors/enums.js";
+import { createProductErrorInfo } from "../services/errors/info.js";
+
 export const createProduct = async (req, res) => {
-    const product = req.body
-    if((!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock || !product.category)){
-        console.error("Complete todos los campos")
+
+    try {        
+        console.log('hol');
+        const product = req.body
+        if((!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock || !product.category)){
+            CustomError.createError({
+                name:"Product creation error",
+                cause:createProductErrorInfo({title, description, price, thumbnail, code, stock, category}),
+                message: "Error trying to create User",
+                code: Errors.INVALID_TYPES_ERROR
+            })
+        }
+        if((await ProductService.verifyCode(product.code)) == false){
+            await ProductService.create(product)
+            res.json(`Product ${product.title} successfully created`)}
+  
+    }catch (error) {
+        console.log(error);
     }
-    if((await ProductService.verifyCode(product.code)) == false){
-        await ProductService.create(product)
-        res.json(`Product ${product.title} successfully created`)
-    } else{
-        console.log('Product already exists');
-    }    
 }
 
 export const getProducts = async (req, res) => {

@@ -2,7 +2,6 @@ import express from "express"
 import handlebars from 'express-handlebars'
 import { Server as IOServer} from 'socket.io'
 import { Server as HttpServer } from 'http'
-//import { connectDB } from "./mongo/mongo.js";
 import __dirname from '../dirname.js'
 import bodyParser from 'body-parser'
 import session from "express-session"
@@ -13,24 +12,25 @@ import mongoose from "mongoose"
 
 
 import messageModel from "../dao/mongo/models/messagges.model.js"
-import { verificarAdmin } from "../public/js/verificarAdmin.js";
-import { passportCall } from "../utils/utils.js";
 
 
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
-
+import errorHandler from '../middlewares/errors/index.js'
 
 import ViewsRouter from "../routes/views.router.js"
 import UsersRouter from "../routes/users.router.js"
 import SessionsRouter from "../routes/session.router.js"
 import ProductsRouter from "../routes/products.router.js"
 import CartsRouter from "../routes/carts.router.js"
+import MocksRouter from "../mocks/mocks.router.js"
+
 const usersRouter = new UsersRouter()
 const viewsRouter = new ViewsRouter()
 const sessionsRouter = new SessionsRouter()
 const productsRouter = new ProductsRouter()
 const cartsRouter = new CartsRouter()
+const mocksRouter = new MocksRouter()
 
 
 
@@ -90,6 +90,9 @@ app.use('/session', usersRouter.getRouter())
 app.use('/api/session', sessionsRouter.getRouter())
 app.use('/api/products', productsRouter.getRouter())
 app.use('/api/carts', cartsRouter.getRouter())
+app.use('/mockingProducts', mocksRouter.getRouter())
+
+app.use(errorHandler)
 
 //app.use('/', viewsRouter) 
 

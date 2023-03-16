@@ -4,6 +4,10 @@ import jwt from 'passport-jwt'
 import GitHubStrategy from 'passport-github2'
 import dotenv from 'dotenv'
 
+import CustomError from "../services/errors/CustomError.js";
+import Errors from "../services/errors/enums.js";
+import { generateUserErrorInfo } from "../services/errors/info.js";
+
 import {createHash, isValidPassword} from "../utils/utils.js"
 import { generateToken } from "../utils/utils.js";
 import { extractCookie } from "../utils/utils.js";
@@ -57,6 +61,14 @@ const initializePassport = () => {
     }, async (req, username, password, done) => {
             const {first_name, last_name, age, email} = req.body
             try {
+                if(!first_name || !last_name || !email){
+                    CustomError.createError({
+                        name:"User creation error",
+                        cause:generateUserErrorInfo({first_name, last_name, age, email}),
+                        message: "Error trying to create User",
+                        code: Errors.INVALID_TYPES_ERROR
+                    })
+                }
                 let user = await UserService.getByEmail(username)
                 if(user) {
                     console.log('User already exists');
