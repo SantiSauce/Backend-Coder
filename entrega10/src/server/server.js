@@ -16,14 +16,13 @@ import messageModel from "../dao/mongo/models/messagges.model.js"
 
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
-import errorHandler from '../middlewares/errors/index.js'
-
 import ViewsRouter from "../routes/views.router.js"
 import UsersRouter from "../routes/users.router.js"
 import SessionsRouter from "../routes/session.router.js"
 import ProductsRouter from "../routes/products.router.js"
 import CartsRouter from "../routes/carts.router.js"
 import MocksRouter from "../mocks/mocks.router.js"
+import { errorHandler } from "../middlewares/errors/errorHandler.js"
 
 const usersRouter = new UsersRouter()
 const viewsRouter = new ViewsRouter()
@@ -93,10 +92,6 @@ app.use('/api/carts', cartsRouter.getRouter())
 app.use('/mockingProducts', mocksRouter.getRouter())
 
 app.use(errorHandler)
-
-//app.use('/', viewsRouter) 
-
-
 
 //server
 

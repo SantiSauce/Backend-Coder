@@ -4,9 +4,7 @@ import jwt from 'passport-jwt'
 import GitHubStrategy from 'passport-github2'
 import dotenv from 'dotenv'
 
-import CustomError from "../services/errors/CustomError.js";
-import Errors from "../services/errors/enums.js";
-import { generateUserErrorInfo } from "../services/errors/info.js";
+
 
 import {createHash, isValidPassword} from "../utils/utils.js"
 import { generateToken } from "../utils/utils.js";
@@ -23,28 +21,32 @@ const ExtractJWT = jwt.ExtractJwt
 
 const initializePassport = () => {
 
-    passport.use('github', new GitHubStrategy(
+    passport.use(
+        'github',
+         new GitHubStrategy(
         {
             clientID: 'Iv1.80eab679689061f3',
             clientSecret: '784034fe38fd6fe5bbada150bf3fec518a0d64e5',
             callbackURL: 'http://localhost:8082/session/githubcallback',
         },
         async(accessToken, refreshToken, profile, done) => {
-            //console.log(profile);
-
             try {
                 const user = await UserService.getByEmail(profile._json.email)
                 if(user) {
-                    console.log('User already exists');
                     user.token = generateToken(user)
                     return done(null, user)
                 }
+                const newCart = {
+                    products: []
+                }
+                await CartService.create(newCart)
+                const cart = await CartService.getLastCart()
                 const newUser = {
                     first_name: profile._json.name,
                     last_name:'',
                     email: profile._json.email,
                     password: '',
-                    rol: 'admin'
+                    cart: cart._id,
                 }
                 const result = await UserService.create(newUser)
                 result.token = generateToken(result)
@@ -62,12 +64,7 @@ const initializePassport = () => {
             const {first_name, last_name, age, email} = req.body
             try {
                 if(!first_name || !last_name || !email){
-                    CustomError.createError({
-                        name:"User creation error",
-                        cause:generateUserErrorInfo({first_name, last_name, age, email}),
-                        message: "Error trying to create User",
-                        code: Errors.INVALID_TYPES_ERROR
-                    })
+                    
                 }
                 let user = await UserService.getByEmail(username)
                 if(user) {
@@ -97,7 +94,7 @@ const initializePassport = () => {
                     email,
                     age,
                     cart: cart._id,
-                    password:createHash(password) 
+                    password:createHash(password)
                 }
                 let result = await UserService.create(newUser)
                 return done(null, result)

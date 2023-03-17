@@ -14,8 +14,8 @@ import {
 
 export default class CartsRouter extends MyRouter{
     init(){
-        this.post('/',createCart)
-        this.get('/', getCarts)
+        this.post('/',['PUBLIC'],createCart)
+        this.get('/', ['USER'], getCarts)
         this.get('/:cid/product/:pid', ['USER'],addProductToCart)
         this.get('/string/:cid/product/:pid/delete', ['USER'], deleteProductFromCart) 
         this.get('/string/:cid', ['USER'],deleteAllProductsFromCart)

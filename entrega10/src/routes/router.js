@@ -1,5 +1,4 @@
 import { Router } from "express";
-import jwt from 'jsonwebtoken'
 
 export default class MyRouter {
 
@@ -31,15 +30,11 @@ export default class MyRouter {
     }
 
     applyCallbacks(callbacks) {
-        return callbacks.map((callback) => async(...params) => {
+        return callbacks.map((callback) => (...params) => {
             try {
-                // params (req, res, next)
-                // apply apunta directamente a la funcion callback
-                // this es para que se utilize en el contexto de la clase Router
-                await callback.apply(this, params)
+                 callback.apply(this, params)
             } catch (error) {
-                console.error(error);
-                // params[1] es el parametro res
+                // console.error(error);
                 params[1].status(500).send(error)
             } 
         })
@@ -50,8 +45,7 @@ export default class MyRouter {
         res.sendServerError = error => res.status(500).send({status: "error", error })
         res.sendUserError = error => res.status(400).send({status: "error", error})
         res.sendNoAuthenticatedError = error => res.status(401).send({status: "error", error})
-        res.sendNoAuthorizatedError = error => res.status(403).send({status: "error", error})
-        
+        res.sendNoAuthorizatedError = error => res.status(403).send({status: "error", error})        
         next()
     }
 
@@ -60,8 +54,9 @@ export default class MyRouter {
         if(policies.includes('PUBLIC')) return next()
         
         if(req.session.user === undefined) {
-            res.redirect('/login')
-            return 
+            // res.redirect('/login')
+            // return
+            return next() 
         }
         
         const user = (req.session.user)
@@ -75,7 +70,7 @@ export default class MyRouter {
 
 
 
-        if(policies.includes('USER')) {
+       /* if(policies.includes('USER')) {
             const authHeaders = req.cookie['santiCookieToken']
             console.log(authHeaders);
             if(!authHeaders) return res.sendNoAuthenticatedError('Unauthenticated')
@@ -93,7 +88,7 @@ export default class MyRouter {
             return next()
         }
 
-        next()
+        next()*/
     }
 
 }

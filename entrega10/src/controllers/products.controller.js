@@ -1,25 +1,23 @@
-import { verificarAdmin } from "../public/js/verificarAdmin.js";
 import { ProductService } from "../repository/index.js";
 
-import CustomError from "../services/errors/CustomError.js";
-import Errors from "../services/errors/enums.js";
-import { createProductErrorInfo } from "../services/errors/info.js";
+import CustomError from "../services/errors/customError.js";
+import { generateProductErrorInfo } from "../services/errors/info.js";
+import { ERRORS_ENUM } from "../consts/ERRORS.js";
+
+
 
 export const createProduct = async (req, res) => {
 
     try {        
-        console.log('hol');
         const product = req.body
         if((!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock || !product.category)){
             CustomError.createError({
-                name:"Product creation error",
-                cause:createProductErrorInfo({title, description, price, thumbnail, code, stock, category}),
-                message: "Error trying to create User",
-                code: Errors.INVALID_TYPES_ERROR
+                name:ERRORS_ENUM["INVALID PRODUCT PROPERTY"],
+                message: generateProductErrorInfo(product)
             })
         }
-        if((await ProductService.verifyCode(product.code)) == false){
-            await ProductService.create(product)
+        if(( await ProductService.verifyCode(product.code)) == false){
+             await ProductService.create(product)
             res.json(`Product ${product.title} successfully created`)}
   
     }catch (error) {
@@ -39,20 +37,20 @@ export const getProducts = async (req, res) => {
 
     const options = {page, limit, lean:true}
 
-    const products = []
+    let products = []
 
     if(filter == 'stock'){
         products = await ProductService.getPaginate({stock:0}, options)
-        if(!products){
-            throw new Error("THE DB IS EMPTY");
-        }
     }
     if(filter !== 'stock'){
         products = await ProductService.getPaginate(search, options)
-        if(!products) {
-            throw new Error("THE DB IS EMPTY")
-        }
     } 
+
+    if(!products){
+        CustomError.createError({
+            message:ERRORS_ENUM["NOT PRODUCTS FOUND WITH CRITERIA"]
+        })
+    }
 
     products.prevLink = (products.hasPrevPage) ? `/?page=${products.prevPage}` : '' 
     products.nextLink = (products.hasNextPage) ? `/?page=${products.nextPage}` : '' 
@@ -74,6 +72,11 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
     const product = await ProductService.getOne(req.params.id)
+    if(!product){
+        CustomError.createError({
+            message:ERRORS_ENUM["PRODUCT NOT FOUND"]
+        })
+    }
     res.json(product)
 }
 

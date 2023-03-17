@@ -1,8 +1,8 @@
 export default class CustomError {
-    static createError({name='error', cause, message, code=1}){
-        const error = new Error(message, {cause})
-        error.name = name
-        error.code = code
+    static createError({status=500, message}){
+        const error = new Error('error')
+        error.status = status
+        error.message = message
         throw error
     }
-} 
+}  
