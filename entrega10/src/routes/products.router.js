@@ -1,19 +1,22 @@
-import MyRouter from "./router.js";
+import { Router } from "express";
 import {
     createProduct,
     getProducts,
     getProductById,
     deleteProduct,
-    updateProduct
+    updateProduct 
 } from '../controllers/products.controller.js'
+import { authPolicies } from "../middlewares/auth.js";
+import asyncHandler from 'express-async-handler'
 
+const router = Router()
 
-export default class ProductsRouter extends MyRouter{
-    init(){
-        this.get('/', ['USER'], getProducts)
-        this.post('/create', ['ADMIN'],createProduct)
-        this.put('/:id', ['ADMIN'],updateProduct)
-        this.delete('/:id', ['ADMIN'],deleteProduct)
-        this.get('/:id', ['USER'], getProductById)
-    }
-}
+    router.get('/', authPolicies('user'), getProducts) 
+    router.post('/create', authPolicies('admin'),asyncHandler(createProduct))
+    router.put('/:id', authPolicies('admin'),updateProduct)
+    router.delete('/:id', authPolicies('admin'),deleteProduct)
+    router.get('/:id', authPolicies('user'), getProductById)
+    
+
+export default router
+    

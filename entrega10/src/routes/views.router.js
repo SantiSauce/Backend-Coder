@@ -1,5 +1,4 @@
-import MyRouter from "./router.js"
-import { passportCall } from "../utils/utils.js" 
+import { Router } from 'express'
 import {
     showAllProducts,
     showOneProduct, 
@@ -10,26 +9,22 @@ import {
     showAdminView,
     getCartView,
     showPurchasesView
-
 } from '../controllers/views.controller.js'
+import { authPolicies } from '../middlewares/auth.js'
 
-export default class ViewsRouter extends MyRouter{
-    init() {
-        this.get('/home', ['USER', 'ADMIN'], showHomeView)
-        this.get('/allProducts', ['USER', 'ADMIN'],showAllProducts)
-        this.get('/insertProduct', ['ADMIN'], getInsertProductView)
-        this.get('/register', ['PUBLIC'], getRegister)
-        this.get('/login', ['PUBLIC'],getLogIn)
-        this.get('/admin', ['ADMIN'],showAdminView)
-        this.get('/cart/:cid', ['USER'],getCartView)
-        this.get('/products/:pid', ['USER'],showOneProduct) 
-        this.get('/purchases', ['USER'],showPurchasesView) 
+const router = Router()
 
-    }
-}
+    router.get('/home', authPolicies(['user', 'admin']), showHomeView)
+    router.get('/allProducts', authPolicies(['user', 'admin']),showAllProducts)
+    router.get('/insertProduct', authPolicies('admin'), getInsertProductView)
+    router.get('/register', authPolicies('public'), getRegister)
+    router.get('/login', authPolicies('public'),getLogIn)
+    router.get('/admin', authPolicies('admin'),showAdminView)
+    router.get('/cart/:cid', authPolicies(['user', 'admin']),getCartView)
+    router.get('/products/:pid', authPolicies(['user', 'admin']),showOneProduct) 
+    router.get('/purchases', authPolicies('user'),showPurchasesView) 
 
-
-
+export default router
 
 
 

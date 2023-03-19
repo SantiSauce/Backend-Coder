@@ -5,16 +5,17 @@ import { generateProductErrorInfo } from "../services/errors/info.js";
 import { ERRORS_ENUM } from "../consts/ERRORS.js";
 
 
-
-export const createProduct = async (req, res) => {
+export const createProduct =  async (req, res) => {
 
     try {        
         const product = req.body
         if((!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock || !product.category)){
-            CustomError.createError({
-                name:ERRORS_ENUM["INVALID PRODUCT PROPERTY"],
-                message: generateProductErrorInfo(product)
+            const err = new CustomError({
+                code: ERRORS_ENUM.INVALID_INPUT.code,
+                message: ERRORS_ENUM.INVALID_INPUT.message,
+                details: generateProductErrorInfo(product)
             })
+            throw err
         }
         if(( await ProductService.verifyCode(product.code)) == false){
              await ProductService.create(product)

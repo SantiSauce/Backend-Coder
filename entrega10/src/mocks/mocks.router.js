@@ -1,7 +1,9 @@
-import MyRouter from "../routes/router.js";
+import { Router } from "express";
+import { authPolicies } from "../middlewares/auth.js";
 import { showGeneratedProducts } from "./mocks.controller.js";
-export default class MocksRouter extends MyRouter{
-    init(){
-        this.get('/', ['PUBLIC'],showGeneratedProducts)      
-    }
-}
+
+const router = Router()
+
+    router.get('/', authPolicies('public'),showGeneratedProducts)      
+
+export default router

@@ -29,15 +29,15 @@ export const showAllProducts = async (req, res) => {
 
     if(filter == 'stock'){
         products = await ProductService.getPaginate({stock:0}, options)
-        if(!products){
-            throw new Error("THE DB IS EMPTY");
-        }
+        // if(!products){
+        //     throw new Error("THE DB IS EMPTY");
+        // }
     }
     if(filter !== 'stock'){
         products = await ProductService.getPaginate(search, options)
-        if(!products) {
-            throw new Error("THE DB IS EMPTY")
-        }
+        // if(!products) {
+        //     throw new Error("THE DB IS EMPTY")
+        // }
     } 
 
     products.prevLink = (products.hasPrevPage) ? `/allProducts?page=${products.prevPage}` : '' 

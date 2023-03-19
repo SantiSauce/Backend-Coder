@@ -1,10 +1,19 @@
+import CustomError from "../services/errors/customError.js"
 import { generateProduct } from "../utils/products.mock.js"
-export const showGeneratedProducts = async (req, res) => {
+import { ERRORS_ENUM } from "../consts/ERRORS.js"
+export const showGeneratedProducts = (req, res) => {
     let numOfProducts = 100
     let products = []
     for (let i = 0; i < numOfProducts; i++) {
         products.push(generateProduct())        
     }
-    console.log(products);
+    if(!products[1].nombrre){
+        const err = new CustomError({
+            code: ERRORS_ENUM.NOT_FOUND.code,
+            message: ERRORS_ENUM.NOT_FOUND.message,
+            details: 'Error al generar los mocks'
+        })
+        throw err
+    }
     res.json({status: 'success', payload:products})
 }

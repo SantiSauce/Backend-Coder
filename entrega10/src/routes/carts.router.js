@@ -1,4 +1,4 @@
-import MyRouter from './router.js'
+import { Router } from 'express'
 import {
     getCarts,
     getCartById,
@@ -10,19 +10,18 @@ import {
     updateQuantity,
     generatePurchase
 } from '../controllers/carts.controller.js'
+import { authPolicies } from '../middlewares/auth.js'
 
-
-export default class CartsRouter extends MyRouter{
-    init(){
-        this.post('/',['PUBLIC'],createCart)
-        this.get('/', ['USER'], getCarts)
-        this.get('/:cid/product/:pid', ['USER'],addProductToCart)
-        this.get('/string/:cid/product/:pid/delete', ['USER'], deleteProductFromCart) 
-        this.get('/string/:cid', ['USER'],deleteAllProductsFromCart)
-        this.get('/string/:cid', ['USER'],updateProductsFromCart)
-        this.get('/:cid/product/:pid/updateQuantity', ['USER'],updateQuantity)
-        this.post('/:cid/purchase', ['USER'],generatePurchase)
-    //this.get('/string/:cid', getCartById)
+const router = Router()
+    
+    router.post('/',authPolicies('public'),createCart)
+    router.get('/', authPolicies('admin'), getCarts)
+    router.get('/:cid/product/:pid', authPolicies(['user', 'admin']),addProductToCart)
+    router.get('/string/:cid/product/:pid/delete', authPolicies('user'), deleteProductFromCart) 
+    router.get('/string/:cid', authPolicies('user'),deleteAllProductsFromCart)
+    router.get('/string/:cid', authPolicies('user'),updateProductsFromCart)
+    router.get('/:cid/product/:pid/updateQuantity', authPolicies('user'),updateQuantity)
+    router.post('/:cid/purchase', authPolicies('user'),generatePurchase)
         
-    }
-}
+export default router
+

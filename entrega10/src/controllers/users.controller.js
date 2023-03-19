@@ -25,8 +25,8 @@ export const logOutUser = async(req, res) => {
 export const getCurrentUser = async(req, res) => {
     try {
         const user = req.user
-        const userDataEdit = await UserService.getSafeInfo(user._id)
-        res.send(userDataEdit)
+        const safeData = await UserService.getSafeInfo(user._id)
+        res.send(safeData)
     } catch (error) {
         console.log(error);
     }

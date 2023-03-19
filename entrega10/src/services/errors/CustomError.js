@@ -1,8 +1,20 @@
-export default class CustomError {
-    static createError({status=500, message}){
-        const error = new Error('error')
-        error.status = status
-        error.message = message
-        throw error
+export default class CustomError extends Error{
+
+    constructor({code, message, details}){
+        super(message)
+        this.code = code
+        this.details = details
     }
 }  
+    
+    
+    
+    
+    
+    // static createError({name, message}){
+    //     const error = new Error('error')
+    //     // console.log(error);
+    //     error.name = name
+    //     error.message = message
+    //     throw error
+    // }
