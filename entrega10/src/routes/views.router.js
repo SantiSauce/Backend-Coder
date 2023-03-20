@@ -1,4 +1,6 @@
 import { Router } from 'express'
+import {reqAdmin} from '../middlewares/auth.js'
+import {reqAuth} from '../middlewares/auth.js'
 import {
     showAllProducts,
     showOneProduct, 
@@ -10,19 +12,18 @@ import {
     getCartView,
     showPurchasesView
 } from '../controllers/views.controller.js'
-import { authPolicies } from '../middlewares/auth.js'
 
 const router = Router()
 
-    router.get('/home', authPolicies(['user', 'admin']), showHomeView)
-    router.get('/allProducts', authPolicies(['user', 'admin']),showAllProducts)
-    router.get('/insertProduct', authPolicies('admin'), getInsertProductView)
-    router.get('/register', authPolicies('public'), getRegister)
-    router.get('/login', authPolicies('public'),getLogIn)
-    router.get('/admin', authPolicies('admin'),showAdminView)
-    router.get('/cart/:cid', authPolicies(['user', 'admin']),getCartView)
-    router.get('/products/:pid', authPolicies(['user', 'admin']),showOneProduct) 
-    router.get('/purchases', authPolicies('user'),showPurchasesView) 
+    router.get('/home', [reqAuth], showHomeView)
+    router.get('/allProducts', [reqAuth],showAllProducts)
+    router.get('/insertProduct', [reqAdmin, reqAuth], getInsertProductView)
+    router.get('/register', getRegister)
+    router.get('/login',getLogIn)
+    router.get('/admin', [reqAdmin, reqAuth],showAdminView)
+    router.get('/cart/:cid', [reqAuth], getCartView)
+    router.get('/products/:pid', [reqAuth],showOneProduct) 
+    router.get('/purchases', [reqAuth],showPurchasesView) 
 
 export default router
 

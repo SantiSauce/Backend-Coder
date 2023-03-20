@@ -11,7 +11,7 @@ const router = Router()
 
     router.use('/', viewsRouter)
     router.use('/session', usersRouter)
-    router.use('/api/session', sessionsRouter)
+    router.use('/api/session', sessionsRouter) 
     router.use('/api/products', productsRouter)
     router.use('/api/carts', cartsRouter)
     router.use('/mockingProducts', mocksRouter)

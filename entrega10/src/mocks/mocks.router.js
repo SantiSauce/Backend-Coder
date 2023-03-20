@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { authPolicies } from "../middlewares/auth.js";
 import { showGeneratedProducts } from "./mocks.controller.js";
+import { reqAdmin } from "../middlewares/auth.js";
+import { reqAuth } from "../middlewares/auth.js";
 
 const router = Router()
 
-    router.get('/', authPolicies('public'),showGeneratedProducts)      
+    router.get('/', [reqAdmin, reqAuth], showGeneratedProducts)      
 
 export default router

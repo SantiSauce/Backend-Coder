@@ -1,6 +1,7 @@
 import CustomError from "../services/errors/customError.js"
 import { generateProduct } from "../utils/products.mock.js"
 import { ERRORS_ENUM } from "../consts/ERRORS.js"
+
 export const showGeneratedProducts = (req, res) => {
     let numOfProducts = 100
     let products = []

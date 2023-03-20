@@ -7,14 +7,3 @@ export default class CustomError extends Error{
     }
 }  
     
-    
-    
-    
-    
-    // static createError({name, message}){
-    //     const error = new Error('error')
-    //     // console.log(error);
-    //     error.name = name
-    //     error.message = message
-    //     throw error
-    // }

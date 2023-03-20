@@ -10,18 +10,18 @@ import {
     updateQuantity,
     generatePurchase
 } from '../controllers/carts.controller.js'
-import { authPolicies } from '../middlewares/auth.js'
+import { reqAuth } from '../middlewares/auth.js'
 
 const router = Router()
     
-    router.post('/',authPolicies('public'),createCart)
-    router.get('/', authPolicies('admin'), getCarts)
-    router.get('/:cid/product/:pid', authPolicies(['user', 'admin']),addProductToCart)
-    router.get('/string/:cid/product/:pid/delete', authPolicies('user'), deleteProductFromCart) 
-    router.get('/string/:cid', authPolicies('user'),deleteAllProductsFromCart)
-    router.get('/string/:cid', authPolicies('user'),updateProductsFromCart)
-    router.get('/:cid/product/:pid/updateQuantity', authPolicies('user'),updateQuantity)
-    router.post('/:cid/purchase', authPolicies('user'),generatePurchase)
+    router.post('/',createCart)
+    router.get('/', [reqAuth], getCarts)
+    router.get('/:cid/product/:pid', [reqAuth], addProductToCart)
+    router.get('/string/:cid/product/:pid/delete', [reqAuth],deleteProductFromCart) 
+    router.get('/string/:cid', [reqAuth],deleteAllProductsFromCart)
+    router.get('/string/:cid', [reqAuth], updateProductsFromCart)
+    router.get('/:cid/product/:pid/updateQuantity', [reqAuth], updateQuantity)
+    router.post('/:cid/purchase', [reqAuth], generatePurchase)
         
 export default router
 
