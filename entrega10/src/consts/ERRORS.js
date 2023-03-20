@@ -4,25 +4,30 @@ export const ERRORS_ENUM = {
         code: 'INVALID_INPUT',
         message: 'Bad request'
     },
+    UNAUTHORIZED : {
+        status: 401,
+        code: 'UNAUTHORIZED',
+        message: 'Invalid credentials'
+    },
+    FORBIDDEN: {
+        status: 403,
+        code: 'FORBIDDEN',
+        message: 'Authorization denied'
+    },
     NOT_FOUND: {
         status: 404,
         code: 'NOT_FOUND',
         message: 'The requested resource was not found'
+    },
+    METHOD_NOT_ALLOWED: {
+        status: 405,
+        code: 'METHOD_NOT_ALLOWED',
+        message: 'HTTP method not compatible with requested resource'
     },
     INTERNAL_SERVER_ERROR: {
         status: 500,
         code: 'INTERNAL_SERVER_ERROR',
         message: 'An internal server error occurred'
     }
+
 }
-    /*"CART NOT FOUND": "CART NOT FOUND",
-    "CART IS EMPTY": "CART IS EMPTY",
-    "INVALID CART PROPERTY": "INVALID CART PROPERTY",
-    "PRODUCT ALREADY IS IN CART": "PRODUCT ALREADY IS IN CART",
-    "PRODUCT NOT FOUND": "PRODUCT NOT FOUND",
-    "NOT PRODUCTS FOUND WITH CRITERIA": "NOT PRODUCTS FOUND WITH CRITERIA",
-    "INVALID PRODUCT PROPERTY": "INVALID PRODUCT PROPERTY",
-    "USER NOT FOUND": "USER NOT FOUND",
-    "INVALID USER PROPERTY": "INVALID USER PROPERTY",
-    "INVALID PASSWORD": "INVALID PASSWORD",
-    "INVALID EMAIL": "INVALID EMAIL",*/

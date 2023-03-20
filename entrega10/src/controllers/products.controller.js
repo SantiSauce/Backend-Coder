@@ -5,12 +5,13 @@ import { generateProductErrorInfo } from "../services/errors/info.js";
 import { ERRORS_ENUM } from "../consts/ERRORS.js";
 
 
-export const createProduct =  async (req, res) => {
+export const createProduct =  async (req, res, next) => {
 
     try {        
         const product = req.body
         if((!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock || !product.category)){
             const err = new CustomError({
+                status: ERRORS_ENUM.INVALID_INPUT.status,
                 code: ERRORS_ENUM.INVALID_INPUT.code,
                 message: ERRORS_ENUM.INVALID_INPUT.message,
                 details: generateProductErrorInfo(product)
@@ -22,63 +23,80 @@ export const createProduct =  async (req, res) => {
             res.json(`Product ${product.title} successfully created`)}
   
     }catch (error) {
-        console.log(error);
+        next(error)
     }
 }
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (req, res, mext) => {
+    try {
+        const limit = req.query?.limit || 10
+        const page = req.query?.page || 1
+        const filter = req.query?.query || ''
+        //const sort = req.params?.sort
     
-    const limit = req.query?.limit || 10
-    const page = req.query?.page || 1
-    const filter = req.query?.query || ''
-    //const sort = req.params?.sort
-
-    const search = {}
-    if(filter) search['category'] = {$regex:filter}
-
-    const options = {page, limit, lean:true}
-
-    let products = []
-
-    if(filter == 'stock'){
-        products = await ProductService.getPaginate({stock:0}, options)
+        const search = {}
+        if(filter) search['category'] = {$regex:filter}
+    
+        const options = {page, limit, lean:true}
+    
+        let products = []
+    
+        if(filter == 'stock'){
+            products = await ProductService.getPaginate({stock:0}, options)
+        }
+        if(filter !== 'stock'){
+            products = await ProductService.getPaginate(search, options)
+        } 
+    
+        if(!products){
+            const err = new CustomError({
+                status: ERRORS_ENUM.NOT_FOUND.status,
+                code: ERRORS_ENUM.NOT_FOUND.code,
+                message: ERRORS_ENUM.NOT_FOUND.message,
+                details: 'Not products found with criteria'
+            })
+            throw err
+        }
+    
+        products.prevLink = (products.hasPrevPage) ? `/?page=${products.prevPage}` : '' 
+        products.nextLink = (products.hasNextPage) ? `/?page=${products.nextPage}` : '' 
+    
+        const result = {
+            status: 'success', 
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.prevLink,
+            nextLink: products.nextLink
+        }
+        res.json(result) 
+        
+    } catch (error) {
+        next(error)
     }
-    if(filter !== 'stock'){
-        products = await ProductService.getPaginate(search, options)
-    } 
-
-    if(!products){
-        CustomError.createError({
-            message:ERRORS_ENUM["NOT PRODUCTS FOUND WITH CRITERIA"]
-        })
-    }
-
-    products.prevLink = (products.hasPrevPage) ? `/?page=${products.prevPage}` : '' 
-    products.nextLink = (products.hasNextPage) ? `/?page=${products.nextPage}` : '' 
-
-    const result = {
-        status: 'success', 
-        payload: products.docs,
-        totalPages: products.totalPages,
-        prevPage: products.prevPage,
-        nextPage: products.nextPage,
-        hasPrevPage: products.hasPrevPage,
-        hasNextPage: products.hasNextPage,
-        prevLink: products.prevLink,
-        nextLink: products.nextLink
-    }
-    res.json(result) 
 
 }
 
-export const getProductById = async (req, res) => {
-    const product = await ProductService.getOne(req.params.id)
-    if(!product){
-        CustomError.createError({
-            message:ERRORS_ENUM["PRODUCT NOT FOUND"]
-        })
+export const getProductById = async (req, res, next) => {
+    try {
+        const product = await ProductService.getOne(req.params.id)
+        if(!product){
+            const err = new CustomError({
+                status: ERRORS_ENUM.NOT_FOUND.status,
+                code: ERRORS_ENUM.NOT_FOUND.code,
+                message: ERRORS_ENUM.NOT_FOUND.message,
+                details: 'Not product found'
+            })
+            throw err
+        }
+        res.json(product)
+        
+    } catch (error) {
+        next(error)
     }
-    res.json(product)
 }
 
 export const deleteProduct = async (req, res) => {

@@ -13,7 +13,7 @@ import { reqAuth } from "../middlewares/auth.js";
 const router = Router()
 
     router.get('/', [reqAuth], getProducts) 
-    router.post('/create', [reqAdmin, reqAuth], (createProduct))
+    router.post('/create', [reqAdmin, reqAuth], createProduct)
     router.put('/:id', [reqAdmin, reqAuth], updateProduct)
     router.delete('/:id', [reqAdmin, reqAuth], deleteProduct)
     router.get('/:id', [reqAuth], getProductById)

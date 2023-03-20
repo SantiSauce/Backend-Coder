@@ -88,44 +88,90 @@ export const updateQuantity = async (req, res) => {
 
 export const generatePurchase = async(req, res) => {
 //2142 ema
+    // try {
+    //     const cid = req.params.cid
+    //     const cart = await CartService.getById(req.params.cid)
+    //     const user = await UserService.getUserByCartId(cid)
+    //     const rejectedProducts = []
+    //     const purchasedProducts = []
+
+    //     let total = 0
+
+
+    //     for (let i = 0; i < cart.products.length; i++) {
+    //         const inStock = ((await ProductService.getStock(cart.products[i].product)) >= cart.products[i].quantity) ? true : false
+    //         if(inStock){
+    //             purchasedProducts.push(cart.products[i])
+    //             total += ((await ProductService.getPrice(cart.products[i].product))*(cart.products[i].quantity))
+    //             await CartService.deleteProduct(cid, cart.products[i].product)
+    //             await ProductService.decreaseStock(cart.products[i].product, cart.products[i].quantity)
+    //         }else{
+    //             rejectedProducts.push(cart.products[i])
+    //         }
+    //     }
+    //     const newTicket = {
+    //         code: generateRandomString(),
+    //         purchase_datetime: new Date(),
+    //         amount: total,
+    //         purchaser: user.email
+    //     }
+    //     console.log(newTicket);
+        
+    
+    //     const ticketCreated = await TicketService.create(newTicket)
+        
+    //     res.status(200).json({status:'Purchase successfully completed', ticket: ticketCreated, productsPurchased: purchasedProducts, productsRejected: rejectedProducts})
+    // } catch (error) {
+    //     next(error)        
+    // }
     try {
-        //const user = req.body
-        const cid = req.params.cid
-        const cart = await CartService.getById(req.params.cid)
-        const user = await UserService.getUserByCartId(cid)
-        const rejectedProducts = []
-        const purchasedProducts = []
-
-        let total = 0        
-
-
-        for (let i = 0; i < cart.products.length; i++) {
-            const inStock = ((await ProductService.getStock(cart.products[i].product)) >= cart.products[i].quantity) ? true : false
-            if(inStock){
-                purchasedProducts.push(cart.products[i])
-                total += ((await ProductService.getPrice(cart.products[i].product))*(cart.products[i].quantity))
-                await CartService.deleteProduct(cid, cart.products[i].product)
-                await ProductService.decreaseStock(cart.products[i].product, cart.products[i].quantity)
-            }else{
-                rejectedProducts.push(cart.products[i])
+        const cid = req.params.cid;
+        const cart = await CartService.getById(cid);
+        const user = await UserService.getUserByCartId(cid);
+        const rejectedProducts = [];
+        const purchasedProducts = [];
+      
+        const productChecks = await Promise.all(
+          cart.products.map(async (product) => {
+            const inStock = await ProductService.getStock(product.product) >= product.quantity;
+            if (inStock) {
+              purchasedProducts.push(product);
+              const price = await ProductService.getPrice(product.product);
+              const subtotal = price * product.quantity;
+              await Promise.all([
+                CartService.deleteProduct(cid, product.product),
+                ProductService.decreaseStock(product.product, product.quantity)
+              ]);
+              return subtotal;
+            } else {
+              rejectedProducts.push(product);
+              return 0;
             }
-        }
+          })
+        );
+      
+        const total = productChecks.reduce((acc, cur) => acc + cur, 0);
+      
         const newTicket = {
-            code: generateRandomString(),
-            purchase_datetime: new Date(),
-            amount: total,
-            purchaser: user.email
-        }
+          code: generateRandomString(),
+          purchase_datetime: new Date(),
+          amount: total,
+          purchaser: user.email,
+        };
         console.log(newTicket);
-        
-    
-        const ticketCreated = await TicketService.create(newTicket)
-        
-        res.status(200).json({status:'Purchase successfully completed', ticket: ticketCreated, productsPurchased: purchasedProducts, productsRejected: rejectedProducts})
-    } catch (error) {
-        console.log(error)        
-    }
-    
+      
+        const ticketCreated = await TicketService.create(newTicket);
+      
+        res.status(200).json({
+          status: "Purchase successfully completed",
+          ticket: ticketCreated,
+          productsPurchased: purchasedProducts,
+          productsRejected: rejectedProducts,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      
 
 }
 
