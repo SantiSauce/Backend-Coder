@@ -6,9 +6,9 @@ export const reqAdmin = (req, res, next) => {
         next();
       } else {
         const err = new CustomError({
-            status: ERRORS_ENUM.UNAUTHORIZED.status,
-            code: ERRORS_ENUM.UNAUTHORIZED.code,
-            message: ERRORS_ENUM.UNAUTHORIZED.message,
+            status: ERRORS_ENUM.FORBIDDEN.status,
+            code: ERRORS_ENUM.FORBIDDEN.code,
+            message: ERRORS_ENUM.FORBIDDEN.message,
             details: 'Access denied with user credentials'
         })
         throw err
