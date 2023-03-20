@@ -10,9 +10,10 @@ export const showGeneratedProducts = (req, res) => {
     }
     if(!products[1].nombrre){
         const err = new CustomError({
+            status: ERRORS_ENUM.NOT_FOUND.status,
             code: ERRORS_ENUM.NOT_FOUND.code,
             message: ERRORS_ENUM.NOT_FOUND.message,
-            details: 'Error al generar los mocks'
+            details: 'Unable to find mocks'
         })
         throw err
     }

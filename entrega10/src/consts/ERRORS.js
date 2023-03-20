@@ -1,15 +1,18 @@
 export const ERRORS_ENUM = {
     INVALID_INPUT: {
+        status: 400,
         code: 'INVALID_INPUT',
-        message: 'La entrada porporcionada no es válida'
+        message: 'Bad request'
     },
     NOT_FOUND: {
+        status: 404,
         code: 'NOT_FOUND',
-        message: 'No se encontró el recurso solicitado'
+        message: 'The requested resource was not found'
     },
     INTERNAL_SERVER_ERROR: {
+        status: 500,
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'Ocurrió un error interno en el servidor'
+        message: 'An internal server error occurred'
     }
 }
     /*"CART NOT FOUND": "CART NOT FOUND",
