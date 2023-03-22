@@ -10,8 +10,11 @@ export const showOneProduct = async (req, res) => {
 }
 
 export const getInsertProductView = async (req, res) => {
+    let adminSession = verificarAdmin(req)
+        let { activeSession, admin } = adminSession;
+        const user = req.session?.user
 
-    res.render('insertProduct')
+    res.render('insertProduct', {activeSession, admin})
 }
 
 export const showAllProducts = async (req, res) => {
@@ -124,7 +127,7 @@ export const getCartView = async(req, res) => {
             const cid = req.params.cid
             const user = req.session?.user
             const cart = await CartService.getById(cid)
-            res.render('cart', {user, cart,}) 
+            res.render('cart', {user, cart,activeSession, admin}) 
       
           }
      } catch (error) {

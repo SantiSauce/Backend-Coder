@@ -1,5 +1,5 @@
 import { ERRORS_ENUM } from "../consts/ERRORS.js";
-import CustomError from "../services/errors/customError.js";
+import CustomError from "../services/errors/CustomError.js";
 
 export const reqAdmin = (req, res, next) => {
     if (req.user && (req.user.rol === 'admin')) {

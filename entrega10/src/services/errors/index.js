@@ -1,1 +1,1 @@
-export {default as CustomError} from './customError.js'
+export {default as CustomError} from './CustomError.js'
