@@ -13,6 +13,7 @@ import messageModel from "../dao/mongo/models/messagges.model.js"
 import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
 import Routers from '../routes/index.js'
+import { addLogger } from "../utils/logger.js"
 
 dotenv.config()
 
@@ -53,7 +54,6 @@ mongoose.connect(process.env.MONGO_URI, (error) => {
     }
 })
 
-//handlebars config
 app.engine('handlebars', handlebars.engine({
     defaultLayout: 'main.handlebars'
     
@@ -64,12 +64,10 @@ app.set('partials', __dirname + '/partials')
 app.set('view engine', 'handlebars')
 app.use('/css', express.static(__dirname +'/public/css' ))
 
-//routes
+app.use(addLogger);
 
 app.use('/', Routers)
-/*app.use(errorHandler)*/
 
-//server
 
 const server = httpServer.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`)

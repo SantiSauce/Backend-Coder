@@ -28,7 +28,7 @@ export const getCurrentUser = async(req, res) => {
         const safeData = await UserService.getSafeInfo(user._id)
         res.send(safeData)
     } catch (error) {
-        console.log(error);
+        req.logger.error(error); 
     }
 }
 

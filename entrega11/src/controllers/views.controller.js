@@ -53,8 +53,7 @@ export const showAllProducts = async (req, res) => {
     }*/
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;
-    console.log(activeSession);
-    console.log(admin);
+
 
     //esto es para el alert cuando recien entras 
     req.session.count = req.session.count ? req.session.count + 1 : 1
@@ -82,8 +81,11 @@ export const showHomeView = async(req, res) => {
         let { activeSession, admin } = adminSession;
         const user = req.session?.user
         res.render('home', {activeSession, admin, user})
+
     }
     else{
+        req.logger.error(error); 
+
         res.json('error')
     }
 }

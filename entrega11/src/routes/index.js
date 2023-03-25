@@ -5,6 +5,7 @@ import sessionsRouter from './session.router.js'
 import productsRouter from './products.router.js'
 import cartsRouter from './carts.router.js'
 import mocksRouter from '../mocks/mocks.router.js'
+import loggerRouter from '../logger/logger.router.js'
 import { errorHandler } from "../middlewares/errors/index.js";
 
 const router = Router()
@@ -15,6 +16,7 @@ const router = Router()
     router.use('/api/products', productsRouter)
     router.use('/api/carts', cartsRouter)
     router.use('/mockingProducts', mocksRouter)
+    router.use('/testLoggers', loggerRouter)
     router.use(errorHandler)
 
 export default router

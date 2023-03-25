@@ -11,8 +11,8 @@ export const createCart = async (req, res) => {
         const cart = await CartService.create()
         res.json({status:'success', cart: cart._id})        
     } catch (error) {
-        console.log(error);
-    }
+        req.logger.error(error); 
+       }
 }
 
 export const getCarts = async (req, res) => {
@@ -21,7 +21,7 @@ export const getCarts = async (req, res) => {
         res.json({status: 'success', carts: carts})
         
     } catch (error) {
-        console.log(error);
+        req.logger.error(error); 
     }
 }
 
@@ -31,7 +31,7 @@ export const getCartById = async (req, res) => {
         const cart = await CartService.getById(req.params,id)
         res.json({status:'success', cart: cart})
     } catch (error) {
-        console.log(error);
+        req.logger.error(error); 
     }
 
 }
@@ -41,9 +41,11 @@ export const addProductToCart = async (req, res) => {
     try {
         const result = await CartService.addProduct(req.params.cid, req.params.pid)
         const cid = req.params.cid
+        req.logger.debug('Acabas de agregar producto al cart'); 
+
         res.redirect(`/cart/${cid}`)        
     } catch (error) {
-        console.log(error)        
+        req.logger.error(error); 
     }
 }
 
@@ -53,7 +55,7 @@ export const deleteProductFromCart = async (req, res) => {
         const result = await CartService.deleteProduct(req.params.cid, req.params.pid)
         res.json({status:'success', result: result})        
     } catch (error) {
-        console.log(error);
+        req.logger.error(error); 
     }
 }
 
@@ -64,7 +66,7 @@ export const deleteAllProductsFromCart = async (req, res) => {
         res.json({status:'success', result:result})
         
     } catch (error) {
-        console.log(error);
+        req.logger.error(error); 
     }
 }
 
@@ -73,7 +75,7 @@ export const updateProductsFromCart = async (req, res) => {
         const result = await CartService.update(req.params.cid, req.body)
          return res.json({status:'success', result: result}) 
     } catch (error) {
-        console.log(error);        
+        req.logger.error(error); 
     }
 }
 
@@ -82,7 +84,7 @@ export const updateQuantity = async (req, res) => {
         const result = await CartService.updateQuantity(req.params.cid, req.params.pid, req.body)
         res.json({status:'success', result: result})
     } catch (error) {
-        console.log(error);
+        req.logger.error(error); 
     }
 }
 
@@ -169,7 +171,7 @@ export const generatePurchase = async(req, res) => {
           productsRejected: rejectedProducts,
         });
       } catch (error) {
-        console.log(error);
+        req.logger.error(error); 
       }
       
 

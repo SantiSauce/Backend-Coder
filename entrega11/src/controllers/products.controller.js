@@ -23,6 +23,7 @@ export const createProduct =  async (req, res, next) => {
             res.json(`Product ${product.title} successfully created`)}
   
     }catch (error) {
+        req.logger.error(error); 
         next(error)
     }
 }
@@ -75,6 +76,7 @@ export const getProducts = async (req, res, mext) => {
         res.json(result) 
         
     } catch (error) {
+        req.logger.error(error);
         next(error)
     }
 
@@ -95,6 +97,7 @@ export const getProductById = async (req, res, next) => {
         res.json(product)
         
     } catch (error) {
+        req.logger.error(error); 
         next(error)
     }
 }
