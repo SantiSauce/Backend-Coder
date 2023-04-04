@@ -94,7 +94,7 @@ export const getRegister = async(req, res) => {
     try {
         res.render('register')
     } catch (error) {
-        console.log(error);        
+        req.logger.error(error)    
     }
 }
 
@@ -102,7 +102,7 @@ export const getLogIn = async(req, res) => {
     try {
         res.render('login')
     } catch (error) {
-        console.log('hola');        
+        req.logger.error(error)        
     }
 } 
 
@@ -114,9 +114,7 @@ export const showAdminView = async (req, res) => {
 } 
 
 export const showPurchasesView = async(req, res) => {
-    const user = req.user
-    console.log(user);
-    
+    const user = req.user    
     res.render('myPurchases')
 }
 
@@ -133,6 +131,6 @@ export const getCartView = async(req, res) => {
       
           }
      } catch (error) {
-          console.log(error);
+          req.logger.error('Error when trying to show cart view: ', error)
      }
 }

@@ -45,7 +45,6 @@ export const postLogIn = async(req, res) => {
 }
 
 export const postGitHubCallBack = async(req, res) => {
-    //console.log('callback:', req.user);
     req.session.user = req.user
 
     res.cookie(process.env.COOKIE_NAME_JWT, req.user.token).redirect('/home')
