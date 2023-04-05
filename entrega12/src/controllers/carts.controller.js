@@ -4,7 +4,8 @@ import { UserService } from "../repository/index.js";
 import { TicketService } from "../repository/index.js";
 import { ProductService } from "../repository/index.js";
 import { generateRandomString } from "../public/js/generateRandomString.js";
-
+import CustomError from "../services/errors/CustomError.js";
+import { ERRORS_ENUM } from "../consts/ERRORS.js";
 export const createCart = async (req, res) => {
 
     try {
@@ -36,12 +37,25 @@ export const getCartById = async (req, res) => {
 
 }
 
-export const addProductToCart = async (req, res) => { 
+export const addProductToCart = async (req, res, next) => { 
 
     try {
+        const user = req.user
+        const product = await ProductService.getById(req.params.pid)
+        if(user.rol === 'premium'){
+            if(product.owner === user.email ){
+                const err = new CustomError({
+                    status: ERRORS_ENUM.FORBIDDEN.status,
+                    code: ERRORS_ENUM.FORBIDDEN.code,
+                    message: ERRORS_ENUM.FORBIDDEN.message,
+                    details: 'You can not add your own products'
+                })
+                throw err
+            }
+        }
         const result = await CartService.addProduct(req.params.cid, req.params.pid)
         const cid = req.params.cid
-        req.logger.debug('Acabas de agregar producto al cart'); 
+        req.logger.debug('Product added to cart'); 
 
         res.redirect(`/cart/${cid}`)        
     } catch (error) {

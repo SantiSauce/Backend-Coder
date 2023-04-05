@@ -9,6 +9,7 @@ export const createProduct =  async (req, res, next) => {
 
     try {        
         const product = req.body
+        product.owner = req.user.email
         if((!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock || !product.category)){
             const err = new CustomError({
                 status: ERRORS_ENUM.INVALID_INPUT.status,
@@ -102,9 +103,25 @@ export const getProductById = async (req, res, next) => {
     }
 }
 
-export const deleteProduct = async (req, res) => {
-    await ProductService.delete(req.params.id)
-    res.json(await ProductService.get())
+export const deleteProduct = async (req, res, next) => {
+    try {
+        const user = req.user
+        const product = req.params.id
+        if(product.owner === user.email || user.rol ==='admin'){
+            await ProductService.delete(product)
+            res.json(await ProductService.get())
+        }else{
+            const err = new CustomError({
+                status: ERRORS_ENUM.FORBIDDEN.status,
+                code: ERRORS_ENUM.FORBIDDEN.code,
+                message: ERRORS_ENUM.FORBIDDEN.message,
+                details: 'Only products you created are allowed to be deleted'
+            })
+            throw err
+        }        
+    } catch (error) {
+        next(error)
+    }
 }
 
 export const updateProduct = async (req, res) => {

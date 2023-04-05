@@ -34,17 +34,13 @@ export default class User {
     getByEmail = async(email) => {
         return await usersModel.findOne({email: email})
     }
-    updatedPassword = async(user, newPassword) => {
+    resetPassword = async(user, newPassword) => {
         await usersModel.findOneAndUpdate(
            { _id: user._id },
            { password: newPassword },
            { new: true }
          );
-
-    }
-
-
-    
+    }   
 
     getUserByCartId = async(cid) => {
         return await usersModel.findOne({cart:cid})        
