@@ -14,6 +14,8 @@ import initializePassport from "../utils/passport.config.js"
 import passport from "passport"
 import Routers from '../routes/index.js'
 import { addLogger } from "../utils/logger.js"
+import jsdom from 'jsdom'
+
 
 dotenv.config()
 

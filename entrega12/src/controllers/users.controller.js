@@ -1,7 +1,11 @@
 import dotenv from 'dotenv'
 import { UserService } from "../repository/index.js";
-import { createHash } from '../utils/utils.js';
+import { createHash, validatePasswordToReset } from '../utils/utils.js';
 import { isValidPassword } from '../utils/utils.js';
+import { ERRORS_ENUM } from '../consts/ERRORS.js';
+import { generateResetToken } from '../public/js/generateResetToken.js';
+import CustomError from '../services/errors/CustomError.js';
+import nodemailer from 'nodemailer'
 dotenv.config()
 
 export const getUsers = async() =>{
@@ -52,13 +56,14 @@ export const postGitHubCallBack = async(req, res) => {
     res.cookie(process.env.COOKIE_NAME_JWT, req.user.token).redirect('/home')
 }
 
-export const resetPassword = async(req, res, password, next) => { // ??????????????
+export const resetPassword = async(req, res, next) => {
 
     try {
-        const user = req.user
-        const isValid = isValidPassword(user, password)
-    
-        if(isValidPassword(user, password)){
+        const {password, email} = req.body    
+        
+        console.log(email);
+
+        if(validatePasswordToReset(email, password)){
             const err = new CustomError({
                 status: ERRORS_ENUM.INVALID_INPUT.status,
                 code: ERRORS_ENUM.INVALID_INPUT.code,
@@ -67,8 +72,9 @@ export const resetPassword = async(req, res, password, next) => { // ???????????
             })
             throw err // esto o poner cartel avisando
         }else{
+            console.log('llegue hasta aca');
             const newPassword = createHash(password)
-            await UserService.resetPassword(user, newPassword)
+            await UserService.resetPassword(user, newPassword)            
         }
         
     } catch (error) {
@@ -84,3 +90,46 @@ export const changeUserRol = async(req, res, next) => {
         req.user.rol = 'premium'
     }
 }
+
+export const sendResetPasswordEmail = async(req, res, next) => {
+    try {
+      const { email } = req.body;
+    //   const resetToken = generateResetToken(email)
+      const transport = nodemailer.createTransport({
+        service: 'gmail',
+        port: 587,
+        auth: {
+          user: 'santiagosaucedo66@gmail.com',
+          pass: 'grjesheoyudjczmt'
+        }
+      });
+      const mailOptions = {
+        from: 'santiagosaucedo66@gmail.com',
+        to: email,
+        subject: 'Reset Password',
+        html: `<p>Hola,</p>
+      <p>Por favor haz clic en el siguiente botón para restablecer tu contraseña:</p>
+      <p><a href=http://localhost:8082/resetPassword/${email}><button style="background-color: #4CAF50; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px;">Restablecer contraseña</button></a></p>`
+
+      };
+      transport.sendMail(mailOptions, function(error, info){
+        if (error) {
+          const err = new CustomError({
+            status: ERRORS_ENUM.INTERNAL_SERVER_ERROR.status,
+            code: ERRORS_ENUM.INTERNAL_SERVER_ERROR.code,
+            message: ERRORS_ENUM.INTERNAL_SERVER_ERROR.message,
+            details: 'Error: email not sent'
+          });
+          req.logger.error(error);
+          next(err);
+        } else {
+          req.logger.debug('Correo electrónico enviado: ' + info.response);
+          res.status(200).json({ message: 'Email enviado exitosamente' });
+        }
+      });
+    } catch (error) {
+      req.logger.error(error);
+      next(error);
+    }
+  };
+  

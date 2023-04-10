@@ -1,6 +1,8 @@
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
 import { CartService, ProductService } from "../repository/index.js";
 import { UserService } from "../repository/index.js";
+import jsdom from 'jsdom'
+
 
 export const showOneProduct = async (req, res) => {
     let adminSession = verificarAdmin(req)
@@ -138,10 +140,18 @@ export const getCartView = async(req, res) => {
 export const resetPasswordView = async(req, res) => {
     let adminSession = verificarAdmin(req)
     let { activeSession, admin } = adminSession;  
-
+    
     try {
-       res.render('passwordReset', {activeSession, admin})
+        const email = req.params.email
+        console.log(email);
+        res.render('resetPassword', {activeSession, admin, email, JSDOM})
     } catch (error) {
         
     }
+}
+
+export const getForgotPasswordView = async(req, res) => {
+    let adminSession = verificarAdmin(req)
+    let { activeSession, admin } = adminSession;
+    res.render('forgotPassword', {activeSession, admin})
 }

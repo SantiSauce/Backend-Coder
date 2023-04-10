@@ -11,7 +11,8 @@ import {
     showAdminView,
     getCartView,
     showPurchasesView,
-    resetPasswordView 
+    resetPasswordView,
+    getForgotPasswordView
 } from '../controllers/views.controller.js'
 
 const router = Router()
@@ -25,7 +26,8 @@ const router = Router()
     router.get('/cart/:cid', [reqAuth], getCartView)
     router.get('/products/:pid', [reqAuth],showOneProduct) 
     router.get('/purchases', [reqAuth],showPurchasesView) 
-    router.get('/resetPassword', resetPasswordView)
+    router.get('/forgotPassword', getForgotPasswordView)
+    router.get('/resetPassword/:email', resetPasswordView)
 
 export default router
 
