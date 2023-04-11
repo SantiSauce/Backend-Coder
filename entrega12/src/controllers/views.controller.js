@@ -1,8 +1,11 @@
 import { verificarAdmin } from "../public/js/verificarAdmin.js";
 import { CartService, ProductService } from "../repository/index.js";
 import { UserService } from "../repository/index.js";
-import jsdom from 'jsdom'
-
+import { ERRORS_ENUM } from "../consts/ERRORS.js";
+import CustomError from "../services/errors/CustomError.js";
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const showOneProduct = async (req, res) => {
     let adminSession = verificarAdmin(req)
@@ -142,9 +145,19 @@ export const resetPasswordView = async(req, res) => {
     let { activeSession, admin } = adminSession;  
     
     try {
-        const email = req.params.email
-        console.log(email);
-        res.render('resetPassword', {activeSession, admin, email, JSDOM})
+        const token = req.params.token
+        const decodedToken = jwt.verify(token, process.env.RESET_TOKEN_SECRET)
+        if(!decodedToken){
+            const err = new CustomError({
+                status: ERRORS_ENUM.UNAUTHORIZED.status,
+                code: ERRORS_ENUM.UNAUTHORIZED.code,
+                message: ERRORS_ENUM.UNAUTHORIZED.message,
+                details: 'Token expired'
+            })
+            throw err
+        }
+        const email = token.email
+        res.render('resetPassword', {activeSession, admin, email})
     } catch (error) {
         
     }

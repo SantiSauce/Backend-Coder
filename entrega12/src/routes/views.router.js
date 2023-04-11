@@ -27,7 +27,7 @@ const router = Router()
     router.get('/products/:pid', [reqAuth],showOneProduct) 
     router.get('/purchases', [reqAuth],showPurchasesView) 
     router.get('/forgotPassword', getForgotPasswordView)
-    router.get('/resetPassword/:email', resetPasswordView)
+    router.get('/resetPassword/:token', resetPasswordView)
 
 export default router
 

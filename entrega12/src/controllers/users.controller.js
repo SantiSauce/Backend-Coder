@@ -60,9 +60,6 @@ export const resetPassword = async(req, res, next) => {
 
     try {
         const {password, email} = req.body    
-        
-        console.log(email);
-
         if(validatePasswordToReset(email, password)){
             const err = new CustomError({
                 status: ERRORS_ENUM.INVALID_INPUT.status,
@@ -70,9 +67,8 @@ export const resetPassword = async(req, res, next) => {
                 message: ERRORS_ENUM.INVALID_INPUT.message,
                 details: 'Can not reset password with current password'
             })
-            throw err // esto o poner cartel avisando
+            throw err
         }else{
-            console.log('llegue hasta aca');
             const newPassword = createHash(password)
             await UserService.resetPassword(user, newPassword)            
         }
@@ -94,6 +90,7 @@ export const changeUserRol = async(req, res, next) => {
 export const sendResetPasswordEmail = async(req, res, next) => {
     try {
       const { email } = req.body;
+      const resetToken = generateResetToken(email)
     //   const resetToken = generateResetToken(email)
       const transport = nodemailer.createTransport({
         service: 'gmail',
@@ -109,7 +106,7 @@ export const sendResetPasswordEmail = async(req, res, next) => {
         subject: 'Reset Password',
         html: `<p>Hola,</p>
       <p>Por favor haz clic en el siguiente botón para restablecer tu contraseña:</p>
-      <p><a href=http://localhost:8082/resetPassword/${email}><button style="background-color: #4CAF50; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px;">Restablecer contraseña</button></a></p>`
+      <p><a href=http://localhost:8082/resetPassword/${resetToken}><button style="background-color: #4CAF50; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px;">Restablecer contraseña</button></a></p>`
 
       };
       transport.sendMail(mailOptions, function(error, info){
