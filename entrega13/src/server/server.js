@@ -1,94 +1,80 @@
 import express from "express"
-import handlebars from 'express-handlebars'
-import { Server as IOServer} from 'socket.io'
-import { Server as HttpServer } from 'http'
-import __dirname from '../dirname.js'
-import bodyParser from 'body-parser'
-import session from "express-session"
-import MongoStore from "connect-mongo"
-import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'
-import mongoose from "mongoose"
-import messageModel from "../dao/mongo/models/messagges.model.js"
-import initializePassport from "../utils/passport.config.js"
+import handlebars from 'express-handlebars'
 import passport from "passport"
+import initializePassport from "../utils/passport.config.js"
+import cookieParser from "cookie-parser";
+import bodyParser from 'body-parser'
+import __dirname from '../dirname.js'
+import session from "express-session"
 import Routers from '../routes/index.js'
+import MongoConnection from "../mongo.js"
+import socket from "../socket.js"
+import { MongoStoreInstance } from "../utils/utils.js"
+import {Server} from 'socket.io'
 import { addLogger } from "../utils/logger.js"
-import jsdom from 'jsdom'
+import initSwagger from '../swagger.js'
+import swaggerUiExpress from 'swagger-ui-express'
 
 
+//const and env variables
 dotenv.config()
-
 const app = express()
 
-const httpServer = new HttpServer(app)
-const io = new IOServer(httpServer)
+//init mongoDB
+MongoConnection.getInstance()
 
-
-//connectDB()
-
-app.use(express.static(__dirname + '/public'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(cookieParser(process.env.COOKIE_SECRET))
-
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        mongoOptions: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        },
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: true, 
-    saveUninitialized: true
-}))
-
+//passport
 initializePassport();
-app.use(passport.initialize())
-app.use(passport.session())
 
-mongoose.connect(process.env.MONGO_URI, (error) => {
-    if(error){
-        console.log('DB No conected')
-        return
-    }
-})
-
-app.engine('handlebars', handlebars.engine({
-    defaultLayout: 'main.handlebars'
-    
-}
-))
+//handlebars
+app.engine('handlebars', handlebars.engine({defaultLayout: 'main.handlebars'}))
 app.set('views', __dirname + '/views')
 app.set('partials', __dirname + '/partials')
 app.set('view engine', 'handlebars')
 app.use('/css', express.static(__dirname +'/public/css' ))
 
+//middlewares
+app.use(session(MongoStoreInstance))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(express.static(__dirname + '/public'))
+app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(addLogger);
+app.use(
+    "/api/docs",
+    swaggerUiExpress.serve,
+    swaggerUiExpress.setup(initSwagger())
+)
 
+//router
 app.use('/', Routers)
 
 
-const server = httpServer.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`)
-})
-server.on('error', (error)=>{
-    console.log(error)
-})
-io.on('connection', (socket) => {
-    console.log(`New client connected, id: ${socket.id}`)
-    socket.on('message',async data =>{
-        console.log(data);  
-        let messagesDB = await messageModel.find().lean().exec()
-    
-        
-        messagesDB.push(data) 
-        io.emit('messageLogs', messagesDB)
-    })
-    
+//app.listen
+const httpServer = app.listen(process.env.PORT, () => {
+    console.log('Server Up!');
 })
 
+//socket
+const io = new Server(httpServer)
+socket(io)
 
-
+/*
+// const httpServer = new HttpServer(app)
+// const io = new IOServer(httpServer)
+// mongoose.connect(process.env.MONGO_URI, (error) => {
+//     if(error){
+//         console.log('DB No conected')
+//         return
+//     }
+// })
+// const server = httpServer.listen(process.env.PORT, () => {
+//     console.log(`Server running on port ${process.env.PORT}`)
+// })
+// server.on('error', (error)=>{
+//     console.log(error)
+// })
+*/

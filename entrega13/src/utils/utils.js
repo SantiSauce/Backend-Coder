@@ -1,9 +1,25 @@
+import MongoStore from 'connect-mongo';
 import bcrypt from 'bcrypt'
 import jwt  from "jsonwebtoken";
 import passport from 'passport';
 import dotenv from 'dotenv'
 import { UserService } from '../repository/index.js';
 dotenv.config()
+
+
+export const MongoStoreInstance = {
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      ttl: 900,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  };
 
  
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
