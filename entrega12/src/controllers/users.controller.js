@@ -59,19 +59,25 @@ export const postGitHubCallBack = async(req, res) => {
 export const resetPassword = async(req, res, next) => {
 
     try {
-        const {password, email} = req.body    
-        if(validatePasswordToReset(email, password)){
-            const err = new CustomError({
-                status: ERRORS_ENUM.INVALID_INPUT.status,
-                code: ERRORS_ENUM.INVALID_INPUT.code,
-                message: ERRORS_ENUM.INVALID_INPUT.message,
-                details: 'Can not reset password with current password'
-            })
-            throw err
-        }else{
+        const {password, email} = req.body  
+        console.log(password, email);  
+        // console.log(validatePasswordToReset(email, password));
+        // if(validatePasswordToReset(email, password)){
+        //     const err = new CustomError({
+        //         status: ERRORS_ENUM.INVALID_INPUT.status,
+        //         code: ERRORS_ENUM.INVALID_INPUT.code,
+        //         message: ERRORS_ENUM.INVALID_INPUT.message,
+        //         details: 'Can not reset password with current password'
+        //     })
+        //     throw err
+        // }else{
             const newPassword = createHash(password)
-            await UserService.resetPassword(user, newPassword)            
-        }
+            const user = await UserService.getByEmail(email)
+            console.log(user);
+            const updatedUser = await UserService.resetPassword(user, newPassword)    
+            console.log(updatedUser);
+            console.log('Okey');        
+        
         
     } catch (error) {
         next(error)
@@ -91,6 +97,15 @@ export const sendResetPasswordEmail = async(req, res, next) => {
     try {
       const { email } = req.body;
       const resetToken = generateResetToken(email)
+      if(await UserService.getByEmail(email) == null){
+        const err = new CustomError({
+          status: ERRORS_ENUM.INVALID_INPUT.status,
+          code: ERRORS_ENUM.INVALID_INPUT.code,
+          message: ERRORS_ENUM.INVALID_INPUT.message,
+          details: 'We could not find an user with this email'
+      })
+      throw err
+      }
     //   const resetToken = generateResetToken(email)
       const transport = nodemailer.createTransport({
         service: 'gmail',

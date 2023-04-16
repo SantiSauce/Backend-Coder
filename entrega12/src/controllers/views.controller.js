@@ -140,10 +140,7 @@ export const getCartView = async(req, res) => {
      }
 }
 
-export const resetPasswordView = async(req, res) => {
-    let adminSession = verificarAdmin(req)
-    let { activeSession, admin } = adminSession;  
-    
+export const resetPasswordView = async(req, res) => {    
     try {
         const token = req.params.token
         const decodedToken = jwt.verify(token, process.env.RESET_TOKEN_SECRET)
@@ -156,15 +153,16 @@ export const resetPasswordView = async(req, res) => {
             })
             throw err
         }
-        const email = token.email
-        res.render('resetPassword', {activeSession, admin, email})
+        const email = decodedToken.email
+        console.log(email);
+        res.render('resetPassword', {email})
     } catch (error) {
-        
+        console.log(error);
     }
 }
 
 export const getForgotPasswordView = async(req, res) => {
-    let adminSession = verificarAdmin(req)
-    let { activeSession, admin } = adminSession;
-    res.render('forgotPassword', {activeSession, admin})
+    const emails = await UserService.get()
+    const emailsList = emails.map(e=> e.email)
+    res.render('forgotPassword', {emailsList})
 }

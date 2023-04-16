@@ -25,7 +25,7 @@ const router = Router()
     router.get('/admin', [reqAdmin, reqAuth],showAdminView)
     router.get('/cart/:cid', [reqAuth], getCartView)
     router.get('/products/:pid', [reqAuth],showOneProduct) 
-    router.get('/purchases', [reqAuth],showPurchasesView) 
+    router.get('/purchases', [reqAuth],showPurchasesView)  
     router.get('/forgotPassword', getForgotPasswordView)
     router.get('/resetPassword/:token', resetPasswordView)
 

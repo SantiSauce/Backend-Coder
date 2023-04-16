@@ -36,6 +36,6 @@ export default class UsersRepository {
     }
 
     resetPassword = async(user, newPassword) => {
-        await this.dao.resetPassword(user, newPassword)
+        return await this.dao.resetPassword(user, newPassword)
     }
 }

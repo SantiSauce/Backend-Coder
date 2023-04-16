@@ -35,16 +35,19 @@ export default class User {
         return await usersModel.findOne({email: email})
     }
     resetPassword = async(user, newPassword) => {
-        await usersModel.findOneAndUpdate(
+        const newUser = await usersModel.findOneAndUpdate(
            { _id: user._id },
            { password: newPassword },
            { new: true }
-         );
+         )
+        return newUser
     }   
 
     getUserByCartId = async(cid) => {
         return await usersModel.findOne({cart:cid})        
     }
+
+
 
 
 }
