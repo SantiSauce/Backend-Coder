@@ -61,25 +61,23 @@ export const resetPassword = async(req, res, next) => {
     try {
         const {password, email} = req.body  
         console.log(password, email);  
-        // console.log(validatePasswordToReset(email, password));
-        // if(validatePasswordToReset(email, password)){
-        //     const err = new CustomError({
-        //         status: ERRORS_ENUM.INVALID_INPUT.status,
-        //         code: ERRORS_ENUM.INVALID_INPUT.code,
-        //         message: ERRORS_ENUM.INVALID_INPUT.message,
-        //         details: 'Can not reset password with current password'
-        //     })
-        //     throw err
-        // }else{
+        const user = await UserService.getByEmail(email)
+
+        if(isValidPassword(user, password)){
+            const err = new CustomError({
+                status: ERRORS_ENUM.INVALID_INPUT.status,
+                code: ERRORS_ENUM.INVALID_INPUT.code,
+                message: ERRORS_ENUM.INVALID_INPUT.message,
+                details: 'Can not reset password with current password'
+            })
+            throw err
+        }else{
             const newPassword = createHash(password)
-            const user = await UserService.getByEmail(email)
-            console.log(user);
             const updatedUser = await UserService.resetPassword(user, newPassword)    
-            console.log(updatedUser);
             console.log('Okey');        
         
         
-    } catch (error) {
+    } }catch (error) {
         next(error)
     }
 }
