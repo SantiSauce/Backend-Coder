@@ -18,7 +18,16 @@ const userSchema = new Schema({
     rol: {
         type: String,
         default: 'user'
-    }
+    },
+    documents: {
+        type: [
+            {
+                name: String,
+                reference: String
+            }
+        ]
+    },
+    last_connection: String
 })
 
 userSchema.pre('findOne', function() {

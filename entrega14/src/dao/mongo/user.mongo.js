@@ -46,6 +46,23 @@ export default class User {
         return await usersModel.findOne({cart:cid})        
     }
 
+    updateUserDocuments = async(cid, files) =>{
+        const user = await usersModel.findByIdAndUpdate(
+            cid,
+            {$addToSet: { documents: files.map(file => file.filename) } },
+            { new: true}
+        )
+        return user
+    }
+
+    getUserDocuments = async(cid) => {
+        const user = await usersModel.findOne({_id:cid})
+        const documents = user.documents
+        return documents
+    }
+
+
+
 
 }
 

@@ -6,11 +6,12 @@ import {
     postGitHubCallBack,
     resetPassword,
     changeUserRol,
-    sendResetPasswordEmail
+    sendResetPasswordEmail,
+    uploadDocuments
 } from '../controllers/users.controller.js'
 import passport from "passport";
 import {reqAuth} from '../middlewares/auth.js'
-
+import upload from '../utils/multer.js'
 
 const router = Router()
 
@@ -22,6 +23,7 @@ const router = Router()
     router.post('/sendResetPasswordEmail', sendResetPasswordEmail)
     router.post('/passwordReset', resetPassword)
     router.post('/premium/:uid', changeUserRol)
+    router.post('/:uid/documents', upload.array('documents'),uploadDocuments)
  
 export default router
 

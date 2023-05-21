@@ -60,8 +60,6 @@ export const resetPassword = async(req, res, next) => {
 
     try {
         const {password, email} = req.body    
-        
-        console.log(email);
 
         if(validatePasswordToReset(email, password)){
             const err = new CustomError({
@@ -70,25 +68,42 @@ export const resetPassword = async(req, res, next) => {
                 message: ERRORS_ENUM.INVALID_INPUT.message,
                 details: 'Can not reset password with current password'
             })
-            throw err // esto o poner cartel avisando
+            throw err
         }else{
-            console.log('llegue hasta aca');
             const newPassword = createHash(password)
             await UserService.resetPassword(user, newPassword)            
         }
         
     } catch (error) {
-        next(error)
+      req.logger.error(error); 
+      next(error)
     }
 }
 
 export const changeUserRol = async(req, res, next) => {
+
+  try {
+
+    const requiredDocuments = ['Identificación', 'Comprobante_de_domicilio', 'Comprobante_de_estado_de_cuenta']
+
+    const hasRequiredDocuments = requiredDocuments.every(doc => req.user.documents.includes(doc))
+
     if(req.user.rol === 'admin') return res.json({status: 'Error', message: 'Admin can not change rol'})
-    if(req.user.rol ==='premium'){
-        req.user.rol = 'user'
-    }else{
-        req.user.rol = 'premium'
-    }
+    if(req.user.rol === 'premium') req.user.rol = 'user'
+    if(hasRequiredDocuments){
+      if(req.user.rol ==='user') req.user.rol = 'premium'}
+    else { 
+      const err = new CustomError({
+        status: ERRORS_ENUM.UNAUTHORIZED.status,
+        code: ERRORS_ENUM.UNAUTHORIZED.code,
+        message: ERRORS_ENUM.UNAUTHORIZED.message,
+        details: 'Can not change role, missing documents'
+    })
+    throw err
+   }
+  } catch (error) {
+    next(error)
+  }
 }
 
 export const sendResetPasswordEmail = async(req, res, next) => {
@@ -133,3 +148,24 @@ export const sendResetPasswordEmail = async(req, res, next) => {
     }
   };
   
+export const uploadDocuments = async(req, res, next) => {
+
+    try {
+      const userId = req.params.uid;
+      const files = req.files; 
+  
+    
+      if (!files || files.length === 0) {
+        return res.status(400).json({ error: 'No se han proporcionado archivos' });
+      }
+  
+      const user = await UserService.updateUserDocuments(userId, files)
+
+      return res.json({ user });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Error del servidor' });
+    }
+
+  }  
+
