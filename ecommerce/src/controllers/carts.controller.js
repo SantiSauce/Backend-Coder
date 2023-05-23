@@ -56,11 +56,11 @@ export const addProductToCart = async (req, res, next) => {
                 throw err
             }
         }
-        console.log('LLEGUE');
         const result = await CartService.addProduct(req.params.cid, req.params.pid)
+        res.status(200).json({message: 'success', status: 200})
         req.logger.debug('Product added to cart'); 
 
-        res.redirect(`/cart/${req.params.cid}`)        
+        // res.redirect(`/cart/${req.params.cid}`)        
     } catch (error) {
         console.log(error);
         req.logger.error(error); 
@@ -142,18 +142,26 @@ export const generatePurchase = async(req, res) => {
           amount: total,
           purchaser: user.email,
         };
-        console.log(newTicket);
         req.logger.info('Generated Ticket: ', newTicket)
-      
+
+        const purchasedProductsComplete = await Promise.all(
+            purchasedProducts.map(async (e) => {
+              const product = await ProductService.getById(e.product);
+              return product;
+            })
+          );
+              
         const ticketCreated = await TicketService.create(newTicket);
+        res.render('successPayment', {newTicket, purchasedProductsComplete})
       
-        res.status(200).json({
-          status: "Purchase successfully completed",
-          ticket: ticketCreated,
-          productsPurchased: purchasedProducts,
-          productsRejected: rejectedProducts,
-        });
+        // res.status(200).json({
+        //   status: "Purchase successfully completed",
+        //   ticket: ticketCreated,
+        //   productsPurchased: purchasedProducts,
+        //   productsRejected: rejectedProducts,
+        // });
       } catch (error) {
+        console.log(error);
         req.logger.error(error); 
       }
       
@@ -189,11 +197,12 @@ export const confirmCart = async(req, res, next) =>{
             products: purchasedProducts
         }
 
-        res.status(200).json({message: 'cart confirmed', data: info})
+        res.status(200).json({message: 'confirmed', data: info})
         // res.redirect(`/api/payments/payment-intents?data=${info}`)
         
         
       } catch (error) {
+        console.log(error);
         req.logger.error(error); 
       }
 }

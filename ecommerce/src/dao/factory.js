@@ -11,12 +11,19 @@ export let Ticket
 
 switch (process.env.PERSISTENCE) {
     default: //case 'MONGO':
-        console.log('connecting mongo...')
+        console.log('connecting mongo..dfvf.')
 
         mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser : true,
+            useNewUrlParser: true,
             useUnifiedTopology: true 
-        }, () => console.log('Mongo connected'))
+          }, (error) => {
+            if (error) {
+              console.error('Error de conexión a MongoDB:', error);
+            } else {
+              console.log('Conexión exitosa a MongoDB');
+            }
+          });
+          
 
         const {default: ProductMongo} = await import ('./mongo/product.mongo.js')
         const {default: CartMongo} = await import ('./mongo/cart.mongo.js')

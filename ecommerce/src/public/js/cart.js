@@ -53,20 +53,33 @@ plusBtns.forEach((plusBtn) => {
 // Redireccionar al proceso de pago (Checkout)
 const redirectToCheckout = async (cid) => {
   try {
-    const response = await fetch("/api/payments/create-checkout-session", {
+    console.log(cid);
+    const confirmCartResponse = await fetch (`/api/carts/${cid}/confirmCart`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type" : "application/json",
       },
-      body: JSON.stringify({ cid }),
+      body: JSON.stringify({cid}),
     });
-
-    const data = await response.json();
-    // Redireccionar al Checkout de Stripe
-    if (response.ok) {
-      window.location.href = data.payload.url;
-    } else {
-      console.error(data.error);
+    const confirmation = await confirmCartResponse.json()
+    
+    if(confirmation.message === "confirmed") {
+      const response = await fetch("/api/payments/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({cid}),
+      });  
+      const data = await response.json();
+      // Redireccionar al Checkout de Stripe
+      if (response.ok) {
+        window.location.href = data.payload.url;
+      } else {
+        console.error(data.error);
+      }
+    }else{
+      alert("Out of stock")
     }
   } catch (error) {
     console.log(error);

@@ -1,6 +1,5 @@
 import cartModel from "./models/carts.model.js"
 import productModel from "./models/product.model.js"
-import { ProductService } from "../../repository/index.js"
 
 export default class Cart {
     constructor(){}
@@ -96,7 +95,8 @@ export default class Cart {
             const productChecks = await Promise.all(
               cart.products.map(async (product) => {
                   purchasedProducts.push(product);
-                  const price = await ProductService.getPrice(product.product);
+                  const knowPriceProduct = await productModel.findOne({_id: product.product})
+                  const price = knowPriceProduct.price
                   const subtotal = price * product.quantity;
                   return subtotal;
               })

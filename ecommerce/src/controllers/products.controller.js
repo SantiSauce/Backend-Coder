@@ -9,7 +9,7 @@ import nodemailer from 'nodemailer'
 export const createProduct =  async (req, res, next) => {
 
     try {        
-        const user = req.user.data
+        const user = req.user
         req.body.owner = (!user) ? 'admin' : user.email
         const product = req.body
 
@@ -30,7 +30,9 @@ export const createProduct =  async (req, res, next) => {
         if( valide === false){
              const prodocutInserted = await ProductService.create(product)
             res.json(`Product ${product.title} successfully created`)
+    
         }else{
+            res.status(400).json({message: 'code already exists', status: 400})
             console.log('code already exists');
         }
   
